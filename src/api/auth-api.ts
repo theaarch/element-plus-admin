@@ -10,6 +10,7 @@ const AuthAPI = {
     formData.append("password", data.password);
     formData.append("captchaKey", data.captchaKey);
     formData.append("captchaCode", data.captchaCode);
+
     return request<any, LoginResult>({
       url: `${AUTH_BASE_URL}/login`,
       method: "post",

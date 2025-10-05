@@ -1,38 +1,38 @@
-import request from "@/utils/request";
+import http from "@/utils/http";
 
 const CONFIG_BASE_URL = "/api/v1/config";
 
 const ConfigAPI = {
   /** 获取配置分页数据 */
   getPage(queryParams?: ConfigPageQuery) {
-    return request<any, PageResult<ConfigPageVO[]>>({
-      url: `${CONFIG_BASE_URL}/page`,
-      method: "get",
+    return http.get<PageResult<ConfigPageVO[]>>(`${CONFIG_BASE_URL}/page`, {
       params: queryParams,
     });
   },
+
   /** 获取配置表单数据 */
   getFormData(id: string) {
-    return request<any, ConfigForm>({
-      url: `${CONFIG_BASE_URL}/${id}/form`,
-      method: "get",
-    });
+    return http.get<ConfigForm>(`${CONFIG_BASE_URL}/${id}/form`);
   },
+
   /** 新增配置 */
   create(data: ConfigForm) {
-    return request({ url: `${CONFIG_BASE_URL}`, method: "post", data });
+    return http.post(`${CONFIG_BASE_URL}`, data);
   },
+
   /** 修改配置 */
   update(id: string, data: ConfigForm) {
-    return request({ url: `${CONFIG_BASE_URL}/${id}`, method: "put", data });
+    return http.put(`${CONFIG_BASE_URL}/${id}`, data);
   },
+
   /** 删除配置 */
   deleteById(id: string) {
-    return request({ url: `${CONFIG_BASE_URL}/${id}`, method: "delete" });
+    return http.delete(`${CONFIG_BASE_URL}/${id}`);
   },
+
   /** 刷新配置缓存 */
   refreshCache() {
-    return request({ url: `${CONFIG_BASE_URL}/refresh`, method: "PUT" });
+    return http.put(`${CONFIG_BASE_URL}/refresh`);
   },
 };
 

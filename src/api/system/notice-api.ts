@@ -1,53 +1,58 @@
-import request from "@/utils/request";
+import http from "@/utils/http";
 
 const NOTICE_BASE_URL = "/api/v1/notices";
 
 const NoticeAPI = {
   /** 获取通知公告分页数据 */
   getPage(queryParams?: NoticePageQuery) {
-    return request<any, PageResult<NoticePageVO[]>>({
-      url: `${NOTICE_BASE_URL}/page`,
-      method: "get",
+    return http.get<PageResult<NoticePageVO[]>>(`${NOTICE_BASE_URL}/page`, {
       params: queryParams,
     });
   },
+
   /** 获取通知公告表单数据 */
   getFormData(id: string) {
-    return request<any, NoticeForm>({ url: `${NOTICE_BASE_URL}/${id}/form`, method: "get" });
+    return http.get<NoticeForm>(`${NOTICE_BASE_URL}/${id}/form`);
   },
+
   /** 添加通知公告 */
   create(data: NoticeForm) {
-    return request({ url: `${NOTICE_BASE_URL}`, method: "post", data });
+    return http.post(`${NOTICE_BASE_URL}`, data);
   },
+
   /** 更新通知公告 */
   update(id: string, data: NoticeForm) {
-    return request({ url: `${NOTICE_BASE_URL}/${id}`, method: "put", data });
+    return http.put(`${NOTICE_BASE_URL}/${id}`, data);
   },
+
   /** 批量删除通知公告，多个以英文逗号(,)分割 */
   deleteByIds(ids: string) {
-    return request({ url: `${NOTICE_BASE_URL}/${ids}`, method: "delete" });
+    return http.delete(`${NOTICE_BASE_URL}/${ids}`);
   },
+
   /** 发布通知 */
   publish(id: string) {
-    return request({ url: `${NOTICE_BASE_URL}/${id}/publish`, method: "put" });
+    return http.put(`${NOTICE_BASE_URL}/${id}/publish`);
   },
+
   /** 撤回通知 */
   revoke(id: string) {
-    return request({ url: `${NOTICE_BASE_URL}/${id}/revoke`, method: "put" });
+    return http.put(`${NOTICE_BASE_URL}/${id}/revoke`);
   },
+
   /** 查看通知 */
   getDetail(id: string) {
-    return request<any, NoticeDetailVO>({ url: `${NOTICE_BASE_URL}/${id}/detail`, method: "get" });
+    return http.get<NoticeDetailVO>(`${NOTICE_BASE_URL}/${id}/detail`);
   },
+
   /** 全部已读 */
   readAll() {
-    return request({ url: `${NOTICE_BASE_URL}/read-all`, method: "put" });
+    return http.put(`${NOTICE_BASE_URL}/read-all`);
   },
+
   /** 获取我的通知分页列表 */
   getMyNoticePage(queryParams?: NoticePageQuery) {
-    return request<any, PageResult<NoticePageVO[]>>({
-      url: `${NOTICE_BASE_URL}/my-page`,
-      method: "get",
+    return http.get<PageResult<NoticePageVO[]>>(`${NOTICE_BASE_URL}/my-page`, {
       params: queryParams,
     });
   },
@@ -63,6 +68,7 @@ export interface NoticePageQuery extends PageQuery {
   /** 是否已读(1:是;0:否) */
   isRead?: number;
 }
+
 export interface NoticeForm {
   /** 通知ID(新增不填) */
   id?: string;
@@ -79,6 +85,7 @@ export interface NoticeForm {
   /** 目标用户ID(多个以英文逗号(,)分割) */
   targetUserIds?: string;
 }
+
 export interface NoticePageVO {
   /** 通知ID */
   id: string;
@@ -101,6 +108,7 @@ export interface NoticePageVO {
   /** 撤回时间 */
   revokeTime?: Date;
 }
+
 export interface NoticeDetailVO {
   /** 通知ID */
   id?: string;

@@ -1,4 +1,4 @@
-import http from "@/services/http";
+import http from "@/utils/http";
 import type { PaginatedResponse } from "@/interfaces/Pagination";
 import type { Role, RoleFilters } from "@/interfaces/Role";
 

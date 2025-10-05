@@ -36,7 +36,7 @@
       </el-tooltip>
 
       <!-- 验证码 -->
-      <el-form-item prop="captchaCode">
+      <!-- <el-form-item prop="captchaCode">
         <div flex>
           <el-input
             v-model.trim="loginFormData.captchaCode"
@@ -61,7 +61,7 @@
             />
           </div>
         </div>
-      </el-form-item>
+      </el-form-item> -->
 
       <div class="flex-x-between w-full">
         <el-checkbox v-model="loginFormData.rememberMe">{{ t("login.rememberMe") }}</el-checkbox>
@@ -111,7 +111,7 @@
 </template>
 <script setup lang="ts">
 import type { FormInstance } from "element-plus";
-import AuthAPI, { type LoginFormData } from "@/api/auth-api";
+import AuthAPI, { type LoginFormData } from "@/api/auth";
 import router from "@/router";
 import { useUserStore } from "@/store";
 import CommonWrapper from "@/components/CommonWrapper/index.vue";

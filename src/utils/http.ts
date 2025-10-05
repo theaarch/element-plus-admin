@@ -11,7 +11,11 @@ import router from "@/router";
 const httpRequest = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 50000,
-  headers: { "Content-Type": "application/json;charset=utf-8" },
+  headers: {
+    "Content-Type": "application/json;charset=utf-8",
+    Accept: "application/json",
+    "X-Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+  },
   paramsSerializer: (params) => qs.stringify(params),
 });
 
@@ -47,7 +51,7 @@ httpRequest.interceptors.response.use(
       return response;
     }
 
-    const { code, data, msg } = response.data;
+    const { code, data, message } = response.data;
 
     // 请求成功
     if (code === ApiCodeEnum.SUCCESS) {
@@ -55,8 +59,8 @@ httpRequest.interceptors.response.use(
     }
 
     // 业务错误
-    ElMessage.error(msg || "系统出错");
-    return Promise.reject(new Error(msg || "Business Error"));
+    ElMessage.error(message || "系统出错");
+    return Promise.reject(new Error(message || "Business Error"));
   },
   async (error) => {
     console.error("Response interceptor error:", error);
@@ -69,7 +73,7 @@ httpRequest.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const { code, msg } = response.data as ApiResponse;
+    const { code, message } = response.data as ApiResponse;
 
     switch (code) {
       case ApiCodeEnum.ACCESS_TOKEN_INVALID:
@@ -79,11 +83,11 @@ httpRequest.interceptors.response.use(
       case ApiCodeEnum.REFRESH_TOKEN_INVALID:
         // Refresh Token 过期，跳转登录页
         await redirectToLogin("登录已过期，请重新登录");
-        return Promise.reject(new Error(msg || "Refresh Token Invalid"));
+        return Promise.reject(new Error(message || "Refresh Token Invalid"));
 
       default:
-        ElMessage.error(msg || "请求失败");
-        return Promise.reject(new Error(msg || "Request Error"));
+        ElMessage.error(message || "请求失败");
+        return Promise.reject(new Error(message || "Request Error"));
     }
   }
 );

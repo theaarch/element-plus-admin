@@ -1,6 +1,6 @@
 import { store } from "@/store";
 
-import AuthAPI, { type LoginFormData } from "@/api/auth-api";
+import AuthAPI, { type LoginFormData } from "@/api/auth";
 import UserAPI, { type UserInfo } from "@/api/system/user-api";
 
 import { AuthStorage } from "@/utils/auth";

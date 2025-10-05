@@ -1,1 +1,0 @@
-import{d as e,o as s,e as t,f as a}from"./index.D0tWUAJm.js";import{E as o}from"./alert.5bpRVx2S.js";const l=e({name:"MultiLevel1",__name:"level1",setup:e=>(s(()=>{}),(e,s)=>{const l=o;return a(),t(l,{closable:!1,title:"菜单一级"})})});export{l as _};

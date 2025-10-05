@@ -2,6 +2,7 @@
   "name": "element-plus-admin",
   "description": "A modern admin dashboard template built with Vue 3, Vite, and Element Plus.",
   "license": "MIT",
+  "version": "3.4.1",
   "private": true,
   "type": "module",
   "scripts": {

@@ -37,7 +37,7 @@ jobs:
           fi
 
       - name: Build project
-        run: pnpm exec vite build --mode staging
+        run: pnpm exec vite build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

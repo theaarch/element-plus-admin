@@ -76,6 +76,11 @@ pnpm run preview
 
 For detailed usage of Element Plus, see [Element Plus Docs](https://element-plus.org/).
 
+## 🙏 Acknowledgement
+
+This project is developed based on [vue3-element-admin](https://github.com/youlaitech/vue3-element-admin).
+Thanks to the original author and contributors.
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please submit a Pull Request or open an Issue.

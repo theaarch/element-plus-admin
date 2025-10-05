@@ -1,7 +1,7 @@
 # element-plus-admin
 
 A modern admin dashboard template built with **Vue 3**, **Vite**, and **Element Plus**.
-This project provides a clean, responsive, and customizable admin interface for web applications.
+This project is based on the open-source project [vue3-element-admin](https://github.com/youlaitech/vue3-element-admin) and has been further customized and optimized.
 
 ## ✨ Features
 

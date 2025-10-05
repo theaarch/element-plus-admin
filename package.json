@@ -1,7 +1,7 @@
 {
   "name": "element-plus-admin",
-  "description": "Vue3 + Vite + TypeScript + Element-Plus 的后台管理模板，vue-element-admin 的 Vue3 版本",
-  "version": "3.4.1",
+  "description": "A modern admin dashboard template built with Vue 3, Vite, and Element Plus.",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {
@@ -122,8 +122,5 @@
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
-  },
-  "repository": "https://gitee.com/youlaiorg/vue3-element-admin.git",
-  "author": "有来开源组织",
-  "license": "MIT"
+  }
 }

@@ -1,0 +1,46 @@
+name: Deploy Vite app to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Set VITE_BASE from repo name
+        run: |
+          REPO_NAME=${GITHUB_REPOSITORY#*/}
+          if [[ "$REPO_NAME" == "${GITHUB_REPOSITORY%%/*}.github.io" ]]; then
+            echo "VITE_BASE=/" >> $GITHUB_ENV
+          else
+            echo "VITE_BASE=/$REPO_NAME/" >> $GITHUB_ENV
+          fi
+
+      - name: Build project
+        run: pnpm exec vite build --mode staging
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist

@@ -1,0 +1,1 @@
+import{bh as e}from"./index.DRPoGZBk.js";const o={fetchRoles:o=>e.get("/api/roles",{params:o}),getRole:o=>e.get(`/api/roles/${o}`),createRole:o=>e.post("/api/roles",o),updateRole:(o,t)=>e.put(`/api/roles/${o}`,t),deleteRole:o=>e.delete(`/api/roles/${o}`)};export{o as R};

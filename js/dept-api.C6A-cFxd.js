@@ -1,1 +1,0 @@
-import{bh as t}from"./index.B9DDwXyn.js";const e="/api/v1/dept",o={getList:o=>t.get(`${e}`,{params:o}),getOptions:()=>t.get(`${e}/options`),getFormData:o=>t.get(`${e}/${o}/form`),create:o=>t.post(`${e}`,o),update:(o,p)=>t.put(`${e}/${o}`,p),deleteByIds:o=>t.delete(`${e}/${o}`)};export{o as D};

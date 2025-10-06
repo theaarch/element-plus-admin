@@ -35,10 +35,11 @@
           </transition>
         </div>
       </div>
+
       <!-- 登录页底部版权 -->
-      <el-text size="small" class="py-2.5! fixed bottom-0 text-center">
+      <!-- <el-text size="small" class="py-2.5! fixed bottom-0 text-center">
         Copyright © 2021 - 2025 youlai.tech All Rights Reserved.
-      </el-text>
+      </el-text> -->
     </div>
   </div>
 </template>

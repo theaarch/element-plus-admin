@@ -149,10 +149,11 @@
     </el-dialog>
 
     <!-- 分配权限弹窗 -->
-    <el-drawer
+    <el-dialog
       v-model="assignPermDialogVisible"
       :title="'【' + checkedRole.name + '】权限分配'"
       :size="drawerSize"
+      align-center
     >
       <div class="flex-x-between">
         <el-input v-model="permKeywords" clearable class="w-[150px]" placeholder="菜单权限名称">
@@ -207,7 +208,7 @@
           <el-button @click="assignPermDialogVisible = false">取 消</el-button>
         </div>
       </template>
-    </el-drawer>
+    </el-dialog>
   </div>
 </template>
 

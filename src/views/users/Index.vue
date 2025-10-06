@@ -164,7 +164,7 @@
     </el-row>
 
     <!-- 用户表单 -->
-    <el-drawer
+    <el-dialog
       v-model="dialog.visible"
       :title="dialog.title"
       append-to-body
@@ -236,7 +236,7 @@
           <el-button @click="handleCloseDialog">取 消</el-button>
         </div>
       </template>
-    </el-drawer>
+    </el-dialog>
 
     <!-- 用户导入 -->
     <UserImport v-model="importDialogVisible" @import-success="handleQuery()" />

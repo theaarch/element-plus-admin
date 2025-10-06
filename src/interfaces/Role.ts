@@ -1,4 +1,5 @@
-// User object
+import { PaginationParameters } from "@/interfaces/request";
+
 export interface Role {
   id: number;
   name: string;
@@ -7,8 +8,7 @@ export interface Role {
   updated_at: string;
 }
 
-// Filters
-export interface RoleFilters {
+export interface RoleFilters extends PaginationParameters {
   id?: string;
   name?: string;
   guard_name?: string;

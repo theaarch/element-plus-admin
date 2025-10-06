@@ -1,57 +1,52 @@
 import http from "@/utils/http";
-
-const USER_BASE_URL = "/api/v1/users";
+import type { ApiResponse } from "@/interfaces/response";
 
 const UserAPI = {
-  /** 获取当前登录用户信息 */
-  getInfo() {
-    return http.get<UserInfo>(`${USER_BASE_URL}/me`);
+  getInfo: async (): Promise<ApiResponse<UserInfo>> => {
+    return await http.get("/api/user");
   },
 
-  /** 获取用户分页列表 */
   getPage(queryParams: UserPageQuery) {
-    return http.get<PageResult<UserPageVO[]>>(`${USER_BASE_URL}/page`, {
+    return http.get(`/api/users`, {
       params: queryParams,
     });
   },
 
-  /** 获取用户表单详情 */
-  getFormData(userId: string) {
-    return http.get<any, UserForm>(`${USER_BASE_URL}/${userId}/form`);
+  getFormData(id: string) {
+    return http.get(`/api/users/${id}`);
   },
 
-  /** 添加用户 */
   create(data: UserForm) {
-    return http.post(`${USER_BASE_URL}`, data);
+    return http.post(`/api/users`, data);
   },
 
-  /** 修改用户 */
   update(id: string, data: UserForm) {
-    return http.put(`${USER_BASE_URL}/${id}`, data);
+    return http.put(`/api/users/${id}`, data);
   },
 
-  /** 修改用户密码  */
-  resetPassword(id: string, password: string) {
-    return http.put(`${USER_BASE_URL}/${id}/password/reset`, undefined, {
-      params: { password },
-    });
+  resetPassword(id: string, data: any) {
+    return http.put(`/api/users/${id}/password`, data);
+  },
+
+  updatePassword(id: string, data: any) {
+    return http.put(`/api/users/${id}/password`, data);
   },
 
   /** 批量删除用户，多个以英文逗号(,)分割 */
   deleteByIds(ids: string) {
-    return http.delete(`${USER_BASE_URL}/${ids}`);
+    return http.delete(`/api/users/${ids}`);
   },
 
   /** 下载用户导入模板 */
   downloadTemplate() {
-    return http.get(`${USER_BASE_URL}/template`, {
+    return http.get(`/api/users/template`, {
       responseType: "blob",
     });
   },
 
   /** 导出用户 */
   export(queryParams: UserPageQuery) {
-    return http.get(`${USER_BASE_URL}/export`, {
+    return http.get(`/api/users/export`, {
       params: queryParams,
       responseType: "blob",
     });
@@ -63,7 +58,7 @@ const UserAPI = {
 
     formData.append("file", file);
 
-    return http.post<ExcelResult>(`${USER_BASE_URL}/import`, formData, {
+    return http.post<ExcelResult>(`/api/users/import`, formData, {
       params: { deptId },
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -71,48 +66,46 @@ const UserAPI = {
 
   /** 获取个人中心用户信息 */
   getProfile() {
-    return http.get<UserProfileVO>(`${USER_BASE_URL}/profile`);
+    return http.get<UserProfileVO>(`/api/profile`);
   },
 
   /** 修改个人中心用户信息 */
   updateProfile(data: UserProfileForm) {
-    return http.put(`${USER_BASE_URL}/profile`, data);
+    return http.put(`/api/profile`, data);
   },
 
   /** 修改个人中心用户密码 */
   changePassword(data: PasswordChangeForm) {
-    return http.put(`${USER_BASE_URL}/password`, data);
+    return http.put(`/api/password`, data);
   },
 
   /** 发送短信验证码（绑定或更换手机号）*/
   sendMobileCode(mobile: string) {
-    return http.post(`${USER_BASE_URL}/mobile/code`, undefined, {
+    return http.post(`/api/mobile/code`, undefined, {
       params: { mobile },
     });
   },
 
   /** 绑定或更换手机号 */
   bindOrChangeMobile(data: MobileUpdateForm) {
-    return http.put(`${USER_BASE_URL}/mobile`, data);
+    return http.put(`/api/mobile`, data);
   },
 
   /** 发送邮箱验证码（绑定或更换邮箱）*/
   sendEmailCode(email: string) {
-    return http.post(`${USER_BASE_URL}/email/code`, undefined, {
+    return http.post(`/api/email/code`, undefined, {
       params: { email },
     });
   },
 
   /** 绑定或更换邮箱 */
   bindOrChangeEmail(data: EmailUpdateForm) {
-    return http.put(`${USER_BASE_URL}/email`, data);
+    return http.put(`/api/email`, data);
   },
 
-  /**
-   *  获取用户下拉列表
-   */
+  /** 获取用户下拉列表 */
   getOptions() {
-    return http.get<OptionType[]>(`${USER_BASE_URL}/options`);
+    return http.get<OptionType[]>(`/api/users/options`);
   },
 };
 
@@ -120,23 +113,12 @@ export default UserAPI;
 
 /** 登录用户信息 */
 export interface UserInfo {
-  /** 用户ID */
   userId?: string;
-
-  /** 用户名 */
   username?: string;
-
-  /** 昵称 */
   nickname?: string;
-
-  /** 头像URL */
   avatar?: string;
-
-  /** 角色 */
-  roles: string[];
-
-  /** 权限 */
-  perms: string[];
+  role_names: string[];
+  permission_names: string[];
 }
 
 /**

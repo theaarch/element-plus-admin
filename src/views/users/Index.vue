@@ -249,7 +249,7 @@ import { DeviceEnum } from "@/enums/settings/device-enum";
 
 import UserAPI, { UserForm, UserPageQuery, UserPageVO } from "@/api/system/user-api";
 import DeptAPI from "@/api/system/dept-api";
-import RoleAPI from "@/api/system/role-api";
+import RoleAPI from "@/api/roles";
 
 import DeptTree from "./components/DeptTree.vue";
 import UserImport from "./components/UserImport.vue";

@@ -140,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/system/role-api";
+import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/roles";
 
 defineOptions({
   name: "Role",

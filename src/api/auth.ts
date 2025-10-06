@@ -1,9 +1,10 @@
-import http from '@/utils/http'
+import http from "@/utils/http";
+import type { ApiResponse } from "@/interfaces/response";
+import type { LoginRequest, LoginResponse } from "@/interfaces/auth";
 
 const AuthAPI = {
-  login: async (data: LoginRequest): Promise<LoginResponse> => {
-    const response = await http.post<LoginResponse>(`/api/auth/token`, data);
-    return response.data;
+  login: async (payload: LoginRequest): Promise<ApiResponse<LoginResponse>> => {
+    return await http.post("/api/auth/token", payload);
   },
 
   logout: async (): Promise<void> => {
@@ -12,14 +13,3 @@ const AuthAPI = {
 };
 
 export default AuthAPI;
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-  remember_me?: boolean;
-}
-
-export interface LoginResponse {
-  token: string;
-  token_type: string;
-}

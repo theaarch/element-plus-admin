@@ -1,4 +1,4 @@
-// User object
+// Permission object
 export interface Permission {
   id: number;
   name: string;
@@ -7,7 +7,7 @@ export interface Permission {
   updated_at: string;
 }
 
-// Filters
+// Permission filters
 export interface PermissionFilters {
   id?: string;
   name?: string;

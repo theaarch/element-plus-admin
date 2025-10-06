@@ -1,3 +1,15 @@
+// Generic response with wrapper
+export interface ApiResponse<T> {
+  data: T;
+}
+
+// Error response
+export interface ApiErrorResponse {
+  message: string;
+  errors?: Record<string, string[]>;
+}
+
+// Pagination response
 export interface PaginationLinks {
   first: string;
   last: string;

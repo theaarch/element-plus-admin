@@ -8,7 +8,7 @@ const http: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 50000,
   headers: {
-    "Content-Type": "application/json;charset=utf-8",
+    "Content-Type": "application/json",
     Accept: "application/json",
     "X-Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
   },
@@ -32,7 +32,7 @@ http.interceptors.request.use(
 
 // Response interceptor
 http.interceptors.response.use(
-  (response) => response,
+  (response) => response.data,
   (error) => {
     const status = error?.response?.status;
 

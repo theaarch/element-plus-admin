@@ -1,6 +1,6 @@
 import http from "@/utils/http";
-import type { PaginatedResponse } from "@/interfaces/Pagination";
-import type { User, UserFilters } from "@/interfaces/User";
+import type { PaginatedResponse } from "@/interfaces/response";
+import type { User, UserFilters } from "@/interfaces/user";
 
 export const fetchUsers = async (filters: UserFilters = {}): Promise<PaginatedResponse<User>> => {
   const response = await http.get<PaginatedResponse<User>>("/users", {

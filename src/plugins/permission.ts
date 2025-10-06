@@ -83,14 +83,14 @@ export function setupPermission() {
 
 /** 判断是否有权限 */
 export function hasAuth(value: string | string[], type: "button" | "role" = "button") {
-  const { roles, perms } = useUserStore().userInfo;
+  const { role_names, permission_names } = useUserStore().userInfo;
 
   // 超级管理员 拥有所有权限
-  if (type === "button" && roles.includes(ROLE_ROOT)) {
+  if (type === "button" && role_names.includes(ROLE_ROOT)) {
     return true;
   }
 
-  const auths = type === "button" ? perms : roles;
+  const auths = type === "button" ? permission_names : role_names;
   return typeof value === "string"
     ? auths.includes(value)
     : value.some((perm) => auths.includes(perm));

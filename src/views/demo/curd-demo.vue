@@ -70,7 +70,7 @@
 <script setup lang="ts">
 import UserAPI from "@/api/system/user-api";
 import DeptAPI from "@/api/system/dept-api";
-import RoleAPI from "@/api/system/role-api";
+import RoleAPI from "@/api/roles";
 import type { UserForm, UserPageQuery } from "@/api/system/user-api";
 import type { IObject, IModalConfig, IContentConfig, ISearchConfig } from "@/components/CURD/types";
 import { DeviceEnum } from "@/enums/settings/device-enum";

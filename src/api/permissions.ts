@@ -1,6 +1,6 @@
 import http from "@/utils/http";
-import type { PaginatedResponse } from "@/interfaces/Pagination";
-import type { Permission, PermissionFilters } from "@/interfaces/Permission";
+import type { PaginatedResponse } from "@/interfaces/response";
+import type { Permission, PermissionFilters } from "@/interfaces/permission";
 
 export const fetchPermissions = async (
   filters: PermissionFilters = {}

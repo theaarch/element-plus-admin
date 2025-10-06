@@ -1,6 +1,6 @@
 import http from "@/utils/http";
-import type { PaginatedResponse } from "@/interfaces/Pagination";
-import type { Menu, MenuFilters } from "@/interfaces/Menu";
+import type { PaginatedResponse } from "@/interfaces/response";
+import type { Menu, MenuFilters } from "@/interfaces/menu";
 
 export const fetchMenus = async (filters: MenuFilters = {}): Promise<PaginatedResponse<Menu>> => {
   const response = await http.get<PaginatedResponse<Menu>>("/menus", {

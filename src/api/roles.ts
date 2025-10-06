@@ -1,33 +1,27 @@
 import http from "@/utils/http";
-import type { PaginatedResponse } from "@/interfaces/Pagination";
-import type { Role, RoleFilters } from "@/interfaces/Role";
+import { PaginatedResponse } from "@/interfaces/response";
+import { Role, RoleFilters } from "@/interfaces/role";
 
-export const fetchRoles = async (filters: RoleFilters = {}): Promise<PaginatedResponse<Role>> => {
-  const response = await http.get<PaginatedResponse<Role>>("/roles", {
-    params: filters,
-  });
-  return response.data;
+const RoleAPI = {
+  fetchRoles(params?: RoleFilters): Promise<PaginatedResponse<Role>> {
+    return http.get(`/api/roles`, { params });
+  },
+
+  getRole(id: number | string): Promise<ApiResponse<Role>> {
+    return http.get(`/api/roles/${id}`);
+  },
+
+  createRole(data: Partial<Role>): Promise<ApiResponse<Role>> {
+    return http.post(`/api/roles`, data);
+  },
+
+  updateRole(id: number, data: Partial<Role>): Promise<ApiResponse<Role>> {
+    return http.put(`/api/roles/${id}`, data);
+  },
+
+  deleteRole(id: number): Promise<void> {
+    return http.delete(`/api/roles/${id}`);
+  },
 };
 
-export const getRole = async (id: number): Promise<Role> => {
-  const response = await http.get<Role>(`/roles/${id}`);
-  return response.data;
-};
-
-export const createRole = async (payload: Partial<Role>): Promise<Role> => {
-  const response = await http.post<Role>("/roles", payload);
-  return response.data;
-};
-
-export const updateRole = async (id: number, payload: Partial<Role>): Promise<Role> => {
-  const response = await http.put<Role>(`/roles/${id}`, payload);
-  return response.data;
-};
-
-export const deleteRole = async (id: number): Promise<void> => {
-  await http.delete(`/roles/${id}`);
-};
-
-export const bulkDeleteRoles = async (ids: number[]): Promise<void> => {
-  await http.delete("/roles", { data: { ids } });
-};
+export default RoleAPI;

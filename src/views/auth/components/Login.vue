@@ -79,7 +79,7 @@
 </template>
 <script setup lang="ts">
 import type { FormInstance } from "element-plus";
-import { type LoginRequest } from "@/api/auth";
+import type { LoginRequest } from "@/interfaces/auth";
 import router from "@/router";
 import { useUserStore } from "@/store";
 import CommonWrapper from "@/components/CommonWrapper/index.vue";

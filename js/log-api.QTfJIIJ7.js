@@ -1,0 +1,1 @@
+import{bh as t}from"./index.B9DDwXyn.js";const s="/api/v1/logs",e={getPage:e=>t.get(`${s}/page`,{params:e}),getVisitTrend:e=>t.get(`${s}/visit-trend`,{params:e}),getVisitStats:()=>t.get(`${s}/visit-stats`)};export{e as L};

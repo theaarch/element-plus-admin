@@ -1,0 +1,1 @@
+import{d as a,ao as s,g as t,f as e,F as r,i as n}from"./index.B9DDwXyn.js";const o={class:"p-5"},p=a({name:"Other",inheritAttrs:!1,__name:"route-param",setup(a){const p=s().query.type;return(a,s)=>(e(),t("div",o,"路由参数type："+r(n(p)),1))}});export{p as default};

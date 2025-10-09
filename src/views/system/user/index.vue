@@ -124,7 +124,7 @@
                   icon="RefreshLeft"
                   size="small"
                   link
-                  @click="hancleResetPassword(scope.row)"
+                  @click="handleResetPassword(scope.row)"
                 >
                   重置密码
                 </el-button>
@@ -320,9 +320,11 @@ const importDialogVisible = ref(false);
 async function fetchData() {
   loading.value = true;
   try {
-    const data = await UserAPI.getPage(queryParams);
-    pageData.value = data.data.list;
-    total.value = data.data.total;
+    const res = await UserAPI.getPage(queryParams);
+    const data = res.data;
+
+    pageData.value = data.list;
+    total.value = data.total;
   } finally {
     loading.value = false;
   }
@@ -349,7 +351,7 @@ function handleSelectionChange(selection: any[]) {
 }
 
 // 重置密码
-function hancleResetPassword(row: UserPageVO) {
+function handleResetPassword(row: UserPageVO) {
   ElMessageBox.prompt("请输入用户【" + row.username + "】的新密码", "重置密码", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
@@ -376,15 +378,21 @@ function hancleResetPassword(row: UserPageVO) {
  */
 async function handleOpenDialog(id?: string) {
   dialog.visible = true;
+
   // 加载角色下拉数据源
-  roleOptions.value = await RoleAPI.getOptions();
+  const rolesOptions = await RoleAPI.getOptions();
+  roleOptions.value = rolesOptions.data;
+
   // 加载部门下拉数据源
-  deptOptions.value = await DeptAPI.getOptions();
+  const departmentsOptions = await DeptAPI.getOptions();
+  deptOptions.value = departmentsOptions.data;
 
   if (id) {
     dialog.title = "修改用户";
-    UserAPI.getFormData(id).then((data) => {
-      Object.assign(formData, { ...data.data });
+    UserAPI.getFormData(id).then((res) => {
+      const data = res.data;
+
+      Object.assign(formData, { ...data });
     });
   } else {
     dialog.title = "新增用户";

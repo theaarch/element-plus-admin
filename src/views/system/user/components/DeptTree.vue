@@ -54,6 +54,7 @@ function handleFilter(value: string, data: any) {
   if (!value) {
     return true;
   }
+
   return data.label.indexOf(value) !== -1;
 }
 
@@ -64,8 +65,10 @@ function handleNodeClick(data: { [key: string]: any }) {
 }
 
 onBeforeMount(() => {
-  DeptAPI.getOptions().then((data) => {
-    deptList.value = data.data;
+  DeptAPI.getOptions().then((res) => {
+    const data = res.data;
+
+    deptList.value = data;
   });
 });
 </script>

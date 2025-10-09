@@ -164,7 +164,7 @@
     </el-row>
 
     <!-- 用户表单 -->
-    <el-dialog
+    <el-drawer
       v-model="dialog.visible"
       :title="dialog.title"
       append-to-body
@@ -236,7 +236,7 @@
           <el-button @click="handleCloseDialog">取 消</el-button>
         </div>
       </template>
-    </el-dialog>
+    </el-drawer>
 
     <!-- 用户导入 -->
     <UserImport v-model="importDialogVisible" @import-success="handleQuery()" />
@@ -249,7 +249,7 @@ import { DeviceEnum } from "@/enums/settings/device-enum";
 
 import UserAPI, { UserForm, UserPageQuery, UserPageVO } from "@/api/system/user-api";
 import DeptAPI from "@/api/system/dept-api";
-import RoleAPI from "@/api/roles";
+import RoleAPI from "@/api/system/role-api";
 
 import DeptTree from "./components/DeptTree.vue";
 import UserImport from "./components/UserImport.vue";

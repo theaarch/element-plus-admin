@@ -19,7 +19,7 @@ export const constantRoutes: RouteRecordRaw[] = [
 
   {
     path: "/login",
-    component: () => import("@/views/auth/Login.vue"),
+    component: () => import("@/views/login/index.vue"),
     meta: { hidden: true },
   },
 
@@ -31,7 +31,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "dashboard",
-        component: () => import("@/views/Dashboard.vue"),
+        component: () => import("@/views/dashboard/index.vue"),
         // 用于 keep-alive 功能，需要与 SFC 中自动推导或显式声明的组件名称一致
         // 参考文档: https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude
         name: "Dashboard",
@@ -72,34 +72,6 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
     ],
   },
-
-  // {
-  //   path: "/dashboard",
-  //   component: Layout,
-  //   name: "dashboard",
-  //   meta: {
-  //     title: "Dashboard",
-  //     icon: "el-icon-User",
-  //     hidden: false,
-  //     keepAlive: false,
-  //     alwaysShow: true,
-  //   },
-  //   children: [
-  //     {
-  //       path: "/users",
-  //       component: () => import("@/views/users/Index.vue"),
-  //       name: "users",
-  //       meta: {
-  //         title: "Users",
-  //         icon: "el-icon-User",
-  //         hidden: false,
-  //         keepAlive: true,
-  //         alwaysShow: false,
-  //       },
-  //     },
-  //   ],
-  // },
-  // ...
 ];
 
 /**

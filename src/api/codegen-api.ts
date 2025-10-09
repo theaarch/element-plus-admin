@@ -1,57 +1,75 @@
-import http from "@/utils/http";
+import request from "@/utils/request";
 
 const GENERATOR_BASE_URL = "/api/v1/codegen";
 
 const GeneratorAPI = {
   /** 获取数据表分页列表 */
   getTablePage(params: TablePageQuery) {
-    return http.get<PageResult<TablePageVO[]>>(`${GENERATOR_BASE_URL}/table/page`, {
+    return request<any, PageResult<TablePageVO[]>>({
+      url: `${GENERATOR_BASE_URL}/table/page`,
+      method: "get",
       params,
     });
   },
 
   /** 获取代码生成配置 */
   getGenConfig(tableName: string) {
-    return http.get<GenConfigForm>(`${GENERATOR_BASE_URL}/${tableName}/config`);
+    return request<any, GenConfigForm>({
+      url: `${GENERATOR_BASE_URL}/${tableName}/config`,
+      method: "get",
+    });
   },
 
   /** 获取代码生成配置 */
   saveGenConfig(tableName: string, data: GenConfigForm) {
-    return http.post(`${GENERATOR_BASE_URL}/${tableName}/config`, data);
+    return request({
+      url: `${GENERATOR_BASE_URL}/${tableName}/config`,
+      method: "post",
+      data,
+    });
   },
 
   /** 获取代码生成预览数据 */
   getPreviewData(tableName: string, pageType?: "classic" | "curd") {
-    return http.get<GeneratorPreviewVO[]>(`${GENERATOR_BASE_URL}/${tableName}/preview`, {
+    return request<any, GeneratorPreviewVO[]>({
+      url: `${GENERATOR_BASE_URL}/${tableName}/preview`,
+      method: "get",
       params: pageType ? { pageType } : undefined,
     });
   },
 
   /** 重置代码生成配置 */
   resetGenConfig(tableName: string) {
-    return http.delete(`${GENERATOR_BASE_URL}/${tableName}/config`);
+    return request({
+      url: `${GENERATOR_BASE_URL}/${tableName}/config`,
+      method: "delete",
+    });
   },
 
-  /** 下载 ZIP 文件 */
+  /**
+   * 下载 ZIP 文件
+   * @param url
+   * @param fileName
+   */
   download(tableName: string, pageType?: "classic" | "curd") {
-    return http
-      .get(`${GENERATOR_BASE_URL}/${tableName}/download`, {
-        params: pageType ? { pageType } : undefined,
-        responseType: "blob",
-      })
-      .then((response) => {
-        const fileName = decodeURI(
-          response.headers["content-disposition"].split(";")[1].split("=")[1]
-        );
+    return request({
+      url: `${GENERATOR_BASE_URL}/${tableName}/download`,
+      method: "get",
+      params: pageType ? { pageType } : undefined,
+      responseType: "blob",
+    }).then((response) => {
+      const fileName = decodeURI(
+        response.headers["content-disposition"].split(";")[1].split("=")[1]
+      );
 
-        const blob = new Blob([response.data], { type: "application/zip" });
-        const a = document.createElement("a");
-        const url = window.URL.createObjectURL(blob);
-        a.href = url;
-        a.download = fileName;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      });
+      const blob = new Blob([response.data], { type: "application/zip" });
+      const a = document.createElement("a");
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
   },
 };
 

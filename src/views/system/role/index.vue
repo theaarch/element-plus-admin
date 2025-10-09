@@ -1,11 +1,12 @@
 <template>
   <div class="app-container">
+    <!-- 搜索区域 -->
     <div class="search-container">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item prop="keywords" label="关键字">
           <el-input
             v-model="queryParams.keywords"
-            placeholder="权限名称"
+            placeholder="角色名称"
             clearable
             @keyup.enter="handleQuery"
           />
@@ -43,8 +44,8 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="权限名称" prop="name" min-width="100" />
-        <el-table-column label="权限编码" prop="code" width="150" />
+        <el-table-column label="角色名称" prop="name" min-width="100" />
+        <el-table-column label="角色编码" prop="code" width="150" />
 
         <el-table-column label="状态" align="center" width="100">
           <template #default="scope">
@@ -57,6 +58,15 @@
 
         <el-table-column fixed="right" label="操作" width="220">
           <template #default="scope">
+            <el-button
+              type="primary"
+              size="small"
+              link
+              icon="position"
+              @click="handleOpenAssignPermDialog(scope.row)"
+            >
+              分配权限
+            </el-button>
             <el-button
               type="primary"
               size="small"
@@ -88,6 +98,7 @@
       />
     </el-card>
 
+    <!-- 角色表单弹窗 -->
     <el-dialog
       v-model="dialog.visible"
       :title="dialog.title"
@@ -95,12 +106,12 @@
       @close="handleCloseDialog"
     >
       <el-form ref="roleFormRef" :model="formData" :rules="rules" label-width="100px">
-        <el-form-item label="权限名称" prop="name">
-          <el-input v-model="formData.name" placeholder="请输入权限名称" />
+        <el-form-item label="角色名称" prop="name">
+          <el-input v-model="formData.name" placeholder="请输入角色名称" />
         </el-form-item>
 
-        <el-form-item label="权限编码" prop="code">
-          <el-input v-model="formData.code" placeholder="请输入权限编码" />
+        <el-form-item label="角色编码" prop="code">
+          <el-input v-model="formData.code" placeholder="请输入角色编码" />
         </el-form-item>
 
         <el-form-item label="数据权限" prop="dataScope">
@@ -131,21 +142,88 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleSubmit">确定</el-button>
-          <el-button @click="handleCloseDialog">取消</el-button>
+          <el-button type="primary" @click="handleSubmit">确 定</el-button>
+          <el-button @click="handleCloseDialog">取 消</el-button>
         </div>
       </template>
     </el-dialog>
+
+    <!-- 分配权限弹窗 -->
+    <el-drawer
+      v-model="assignPermDialogVisible"
+      :title="'【' + checkedRole.name + '】权限分配'"
+      :size="drawerSize"
+    >
+      <div class="flex-x-between">
+        <el-input v-model="permKeywords" clearable class="w-[150px]" placeholder="菜单权限名称">
+          <template #prefix>
+            <Search />
+          </template>
+        </el-input>
+
+        <div class="flex-center ml-5">
+          <el-button type="primary" size="small" plain @click="togglePermTree">
+            <template #icon>
+              <Switch />
+            </template>
+            {{ isExpanded ? "收缩" : "展开" }}
+          </el-button>
+          <el-checkbox
+            v-model="parentChildLinked"
+            class="ml-5"
+            @change="handleparentChildLinkedChange"
+          >
+            父子联动
+          </el-checkbox>
+
+          <el-tooltip placement="bottom">
+            <template #content>
+              如果只需勾选菜单权限，不需要勾选子菜单或者按钮权限，请关闭父子联动
+            </template>
+            <el-icon class="ml-1 color-[--el-color-primary] inline-block cursor-pointer">
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
+        </div>
+      </div>
+
+      <el-tree
+        ref="permTreeRef"
+        node-key="value"
+        show-checkbox
+        :data="menuPermOptions"
+        :filter-node-method="handlePermFilter"
+        :default-expand-all="true"
+        :check-strictly="!parentChildLinked"
+        class="mt-5"
+      >
+        <template #default="{ data }">
+          {{ data.label }}
+        </template>
+      </el-tree>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="handleAssignPermSubmit">确 定</el-button>
+          <el-button @click="assignPermDialogVisible = false">取 消</el-button>
+        </div>
+      </template>
+    </el-drawer>
   </div>
 </template>
 
 <script setup lang="ts">
-import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/roles";
+import { useAppStore } from "@/store/modules/app-store";
+import { DeviceEnum } from "@/enums/settings/device-enum";
+
+import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/system/role-api";
+import MenuAPI from "@/api/system/menu-api";
 
 defineOptions({
   name: "Role",
   inheritAttrs: false,
 });
+
+const appStore = useAppStore();
 
 const queryFormRef = ref();
 const roleFormRef = ref();
@@ -160,8 +238,10 @@ const queryParams = reactive<RolePageQuery>({
   pageSize: 10,
 });
 
-// 权限表格数据
+// 角色表格数据
 const roleList = ref<RolePageVO[]>();
+// 菜单权限下拉
+const menuPermOptions = ref<OptionType[]>([]);
 
 // 弹窗
 const dialog = reactive({
@@ -169,20 +249,33 @@ const dialog = reactive({
   visible: false,
 });
 
-// 权限表单
+const drawerSize = computed(() => (appStore.device === DeviceEnum.DESKTOP ? "600px" : "90%"));
+
+// 角色表单
 const formData = reactive<RoleForm>({
   sort: 1,
   status: 1,
 });
 
 const rules = reactive({
-  name: [{ required: true, message: "请输入权限名称", trigger: "blur" }],
-  code: [{ required: true, message: "请输入权限编码", trigger: "blur" }],
+  name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
+  code: [{ required: true, message: "请输入角色编码", trigger: "blur" }],
   dataScope: [{ required: true, message: "请选择数据权限", trigger: "blur" }],
   status: [{ required: true, message: "请选择状态", trigger: "blur" }],
 });
 
+// 选中的角色
+interface CheckedRole {
+  id?: string;
+  name?: string;
+}
+const checkedRole = ref<CheckedRole>({});
+const assignPermDialogVisible = ref(false);
+
 const permKeywords = ref("");
+const isExpanded = ref(true);
+
+const parentChildLinked = ref(true);
 
 // 获取数据
 function fetchData() {
@@ -215,20 +308,20 @@ function handleSelectionChange(selection: any) {
   ids.value = selection.map((item: any) => item.id);
 }
 
-// 打开权限弹窗
+// 打开角色弹窗
 function handleOpenDialog(roleId?: string) {
   dialog.visible = true;
   if (roleId) {
-    dialog.title = "修改权限";
+    dialog.title = "修改角色";
     RoleAPI.getFormData(roleId).then((data) => {
       Object.assign(formData, data);
     });
   } else {
-    dialog.title = "新增权限";
+    dialog.title = "新增角色";
   }
 }
 
-// 提交权限表单
+// 提交角色表单
 function handleSubmit() {
   roleFormRef.value.validate((valid: any) => {
     if (valid) {
@@ -267,7 +360,7 @@ function handleCloseDialog() {
   formData.status = 1;
 }
 
-// 删除权限
+// 删除角色
 function handleDelete(roleId?: number) {
   const roleIds = [roleId || ids.value].join(",");
   if (!roleIds) {
@@ -295,10 +388,85 @@ function handleDelete(roleId?: number) {
   );
 }
 
+// 打开分配菜单权限弹窗
+async function handleOpenAssignPermDialog(row: RolePageVO) {
+  const roleId = row.id;
+  if (roleId) {
+    assignPermDialogVisible.value = true;
+    loading.value = true;
+
+    checkedRole.value.id = roleId;
+    checkedRole.value.name = row.name;
+
+    // 获取所有的菜单
+    menuPermOptions.value = await MenuAPI.getOptions();
+
+    // 回显角色已拥有的菜单
+    RoleAPI.getRoleMenuIds(roleId)
+      .then((data) => {
+        const checkedMenuIds = data;
+        checkedMenuIds.forEach((menuId) => permTreeRef.value!.setChecked(menuId, true, false));
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
+}
+
+// 分配菜单权限提交
+function handleAssignPermSubmit() {
+  const roleId = checkedRole.value.id;
+  if (roleId) {
+    const checkedMenuIds: number[] = permTreeRef
+      .value!.getCheckedNodes(false, true)
+      .map((node: any) => node.value);
+
+    loading.value = true;
+    RoleAPI.updateRoleMenus(roleId, checkedMenuIds)
+      .then(() => {
+        ElMessage.success("分配权限成功");
+        assignPermDialogVisible.value = false;
+        handleResetQuery();
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
+}
+
+// 展开/收缩 菜单权限树
+function togglePermTree() {
+  isExpanded.value = !isExpanded.value;
+  if (permTreeRef.value) {
+    Object.values(permTreeRef.value.store.nodesMap).forEach((node: any) => {
+      if (isExpanded.value) {
+        node.expand();
+      } else {
+        node.collapse();
+      }
+    });
+  }
+}
+
 // 权限筛选
 watch(permKeywords, (val) => {
   permTreeRef.value!.filter(val);
 });
+
+function handlePermFilter(
+  value: string,
+  data: {
+    [key: string]: any;
+  }
+) {
+  if (!value) return true;
+  return data.label.includes(value);
+}
+
+// 父子菜单节点是否联动
+function handleparentChildLinkedChange(val: any) {
+  parentChildLinked.value = val;
+}
 
 onMounted(() => {
   handleQuery();

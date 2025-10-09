@@ -1,9 +1,12 @@
-import http from "@/utils/http";
+import request from "@/utils/request";
 
 const FileAPI = {
   /** 上传文件 （传入 FormData，上传进度回调） */
   upload(formData: FormData, onProgress?: (percent: number) => void) {
-    return http.post<FileInfo>("/api/v1/files", formData, {
+    return request<any, FileInfo>({
+      url: "/api/v1/files",
+      method: "post",
+      data: formData,
       headers: { "Content-Type": "multipart/form-data" },
       onUploadProgress: (progressEvent) => {
         if (progressEvent.total) {
@@ -18,19 +21,30 @@ const FileAPI = {
   uploadFile(file: File) {
     const formData = new FormData();
     formData.append("file", file);
-    return http.post<FileInfo>("/api/v1/files", formData, {
+    return request<any, FileInfo>({
+      url: "/api/v1/files",
+      method: "post",
+      data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
 
   /** 删除文件 */
   delete(filePath?: string) {
-    return http.delete("/api/v1/files", { params: { filePath } });
+    return request({
+      url: "/api/v1/files",
+      method: "delete",
+      params: { filePath },
+    });
   },
 
   /** 下载文件 */
   download(url: string, fileName?: string) {
-    return http.get(url, { responseType: "blob" }).then((res) => {
+    return request({
+      url,
+      method: "get",
+      responseType: "blob",
+    }).then((res) => {
       const blob = new Blob([res.data]);
       const a = document.createElement("a");
       const urlObject = window.URL.createObjectURL(blob);

@@ -1,36 +1,31 @@
-import http from "@/utils/http";
+import request from "@/utils/request";
 
 const DEPT_BASE_URL = "/api/v1/dept";
 
 const DeptAPI = {
   /** 获取部门树形列表 */
   getList(queryParams?: DeptQuery) {
-    return http.get<DeptVO[]>(`${DEPT_BASE_URL}`, { params: queryParams });
+    return request<any, DeptVO[]>({ url: `${DEPT_BASE_URL}`, method: "get", params: queryParams });
   },
-
   /** 获取部门下拉数据源 */
   getOptions() {
-    return http.get<OptionType[]>(`${DEPT_BASE_URL}/options`);
+    return request<any, OptionType[]>({ url: `${DEPT_BASE_URL}/options`, method: "get" });
   },
-
   /** 获取部门表单数据 */
   getFormData(id: string) {
-    return http.get<DeptForm>(`${DEPT_BASE_URL}/${id}/form`);
+    return request<any, DeptForm>({ url: `${DEPT_BASE_URL}/${id}/form`, method: "get" });
   },
-
   /** 新增部门 */
   create(data: DeptForm) {
-    return http.post(`${DEPT_BASE_URL}`, data);
+    return request({ url: `${DEPT_BASE_URL}`, method: "post", data });
   },
-
   /** 修改部门 */
   update(id: string, data: DeptForm) {
-    return http.put(`${DEPT_BASE_URL}/${id}`, data);
+    return request({ url: `${DEPT_BASE_URL}/${id}`, method: "put", data });
   },
-
   /** 批量删除部门，多个以英文逗号(,)分割 */
   deleteByIds(ids: string) {
-    return http.delete(`${DEPT_BASE_URL}/${ids}`);
+    return request({ url: `${DEPT_BASE_URL}/${ids}`, method: "delete" });
   },
 };
 

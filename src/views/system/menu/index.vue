@@ -117,12 +117,11 @@
       </el-table>
     </el-card>
 
-    <el-dialog
+    <el-drawer
       v-model="dialog.visible"
       :title="dialog.title"
       :size="drawerSize"
       @close="handleCloseDialog"
-      align-center
     >
       <el-form ref="menuFormRef" :model="formData" :rules="rules" label-width="100px">
         <el-form-item label="父级菜单" prop="parentId">
@@ -332,11 +331,11 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleSubmit">确定</el-button>
-          <el-button @click="handleCloseDialog">取消</el-button>
+          <el-button type="primary" @click="handleSubmit">确 定</el-button>
+          <el-button @click="handleCloseDialog">取 消</el-button>
         </div>
       </template>
-    </el-dialog>
+    </el-drawer>
   </div>
 </template>
 

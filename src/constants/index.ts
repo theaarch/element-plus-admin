@@ -31,7 +31,7 @@ export const STORAGE_KEYS = {
   ACTIVE_TOP_MENU_PATH: `${APP_PREFIX}:app:active_top_menu_path`, // 当前激活的顶部菜单路径
 } as const;
 
-export const ROLE_ROOT = "super-admin"; // 超级管理员角色
+export const ROLE_ROOT = "ROOT"; // 超级管理员角色
 
 // 分组键集合（便于批量操作）
 export const AUTH_KEYS = {

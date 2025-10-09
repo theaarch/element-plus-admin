@@ -287,7 +287,7 @@ function handleDelete(id?: number) {
 // 打开字典项
 function handleOpenDictData(row: DictPageVO) {
   router.push({
-    path: "/dictionaries/items",
+    path: "/system/dict-item",
     query: { dictCode: row.dictCode, title: "【" + row.name + "】字典数据" },
   });
 }

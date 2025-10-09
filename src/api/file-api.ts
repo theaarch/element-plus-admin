@@ -21,38 +21,34 @@ const FileAPI = {
   uploadFile(file: File) {
     const formData = new FormData();
     formData.append("file", file);
-    return http<any, FileInfo>({
-      url: "/api/v1/files",
-      method: "post",
-      data: formData,
+
+    return http.post<any, FileInfo>("/api/v1/files", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
 
   /** 删除文件 */
   delete(filePath?: string) {
-    return http({
-      url: "/api/v1/files",
-      method: "delete",
+    return http.delete("/api/v1/files", {
       params: { filePath },
     });
   },
 
   /** 下载文件 */
   download(url: string, fileName?: string) {
-    return http({
-      url,
-      method: "get",
-      responseType: "blob",
-    }).then((res) => {
-      const blob = new Blob([res.data]);
-      const a = document.createElement("a");
-      const urlObject = window.URL.createObjectURL(blob);
-      a.href = urlObject;
-      a.download = fileName || "下载文件";
-      a.click();
-      window.URL.revokeObjectURL(urlObject);
-    });
+    return http
+      .get(url, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        const blob = new Blob([res.data]);
+        const a = document.createElement("a");
+        const urlObject = window.URL.createObjectURL(blob);
+        a.href = urlObject;
+        a.download = fileName || "下载文件";
+        a.click();
+        window.URL.revokeObjectURL(urlObject);
+      });
   },
 };
 

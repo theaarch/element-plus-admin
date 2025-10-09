@@ -1,38 +1,43 @@
 import http from "@/utils/http";
+
 const MENU_BASE_URL = "/api/v1/menus";
 
 const MenuAPI = {
   /** 获取当前用户的路由列表 */
   getRoutes() {
-    return http<any, RouteVO[]>({ url: `${MENU_BASE_URL}/routes`, method: "get" });
+    return http.get<any, RouteVO[]>(`${MENU_BASE_URL}/routes`);
   },
+
   /** 获取菜单树形列表 */
   getList(queryParams: MenuQuery) {
-    return http<any, MenuVO[]>({ url: `${MENU_BASE_URL}`, method: "get", params: queryParams });
+    return http.get<any, MenuVO[]>(`${MENU_BASE_URL}`, { params: queryParams });
   },
+
   /** 获取菜单下拉数据源 */
   getOptions(onlyParent?: boolean) {
-    return http<any, OptionType[]>({
-      url: `${MENU_BASE_URL}/options`,
-      method: "get",
+    return http.get<any, OptionType[]>(`${MENU_BASE_URL}/options`, {
       params: { onlyParent },
     });
   },
+
   /** 获取菜单表单数据 */
   getFormData(id: string) {
-    return http<any, MenuForm>({ url: `${MENU_BASE_URL}/${id}/form`, method: "get" });
+    return http.get<any, MenuForm>(`${MENU_BASE_URL}/${id}/form`);
   },
+
   /** 新增菜单 */
   create(data: MenuForm) {
-    return http({ url: `${MENU_BASE_URL}`, method: "post", data });
+    return http.post(`${MENU_BASE_URL}`, data);
   },
+
   /** 修改菜单 */
   update(id: string, data: MenuForm) {
-    return http({ url: `${MENU_BASE_URL}/${id}`, method: "put", data });
+    return http.put(`${MENU_BASE_URL}/${id}`, data);
   },
+
   /** 删除菜单 */
   deleteById(id: string) {
-    return http({ url: `${MENU_BASE_URL}/${id}`, method: "delete" });
+    return http.delete(`${MENU_BASE_URL}/${id}`);
   },
 };
 
@@ -42,7 +47,9 @@ export interface MenuQuery {
   /** 搜索关键字 */
   keywords?: string;
 }
+
 import type { MenuTypeEnum } from "@/enums/system/menu-enum";
+
 export interface MenuVO {
   /** 子菜单 */
   children?: MenuVO[];
@@ -71,6 +78,7 @@ export interface MenuVO {
   /** 是否可见(1:显示;0:隐藏) */
   visible?: number;
 }
+
 export interface MenuForm {
   /** 菜单ID */
   id?: string;
@@ -103,10 +111,12 @@ export interface MenuForm {
   /** 其他参数 */
   params?: KeyValue[];
 }
+
 interface KeyValue {
   key: string;
   value: string;
 }
+
 export interface RouteVO {
   /** 子路由列表 */
   children: RouteVO[];
@@ -121,6 +131,7 @@ export interface RouteVO {
   /** 跳转链接 */
   redirect?: string;
 }
+
 export interface Meta {
   /** 【目录】只有一个子路由是否始终显示 */
   alwaysShow?: boolean;

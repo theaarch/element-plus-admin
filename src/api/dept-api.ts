@@ -5,27 +5,32 @@ const DEPT_BASE_URL = "/api/v1/dept";
 const DeptAPI = {
   /** 获取部门树形列表 */
   getList(queryParams?: DeptQuery) {
-    return http<any, DeptVO[]>({ url: `${DEPT_BASE_URL}`, method: "get", params: queryParams });
+    return http.get<any, DeptVO[]>(`${DEPT_BASE_URL}`, { params: queryParams });
   },
+
   /** 获取部门下拉数据源 */
   getOptions() {
-    return http<any, OptionType[]>({ url: `${DEPT_BASE_URL}/options`, method: "get" });
+    return http.get<any, OptionType[]>(`${DEPT_BASE_URL}/options`);
   },
+
   /** 获取部门表单数据 */
   getFormData(id: string) {
-    return http<any, DeptForm>({ url: `${DEPT_BASE_URL}/${id}/form`, method: "get" });
+    return http.get<any, DeptForm>(`${DEPT_BASE_URL}/${id}/form`);
   },
+
   /** 新增部门 */
   create(data: DeptForm) {
-    return http({ url: `${DEPT_BASE_URL}`, method: "post", data });
+    return http.post(`${DEPT_BASE_URL}`, data);
   },
+
   /** 修改部门 */
   update(id: string, data: DeptForm) {
-    return http({ url: `${DEPT_BASE_URL}/${id}`, method: "put", data });
+    return http.put(`${DEPT_BASE_URL}/${id}`, data);
   },
+
   /** 批量删除部门，多个以英文逗号(,)分割 */
   deleteByIds(ids: string) {
-    return http({ url: `${DEPT_BASE_URL}/${ids}`, method: "delete" });
+    return http.delete(`${DEPT_BASE_URL}/${ids}`);
   },
 };
 
@@ -50,7 +55,7 @@ export interface DeptVO {
   /** 部门编号 */
   code?: string;
   /** 父部门ID */
-  parentid?: string;
+  parentId?: string;
   /** 排序 */
   sort?: number;
   /** 状态(1:启用；0:禁用) */

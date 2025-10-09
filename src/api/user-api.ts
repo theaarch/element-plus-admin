@@ -9,10 +9,7 @@ const UserAPI = {
    * @returns 登录用户昵称、头像信息，包括角色和权限
    */
   getInfo() {
-    return http<any, UserInfo>({
-      url: `${USER_BASE_URL}/me`,
-      method: "get",
-    });
+    return http.get<any, UserInfo>(`${USER_BASE_URL}/me`);
   },
 
   /**
@@ -21,9 +18,7 @@ const UserAPI = {
    * @param queryParams 查询参数
    */
   getPage(queryParams: UserPageQuery) {
-    return http<any, PageResult<UserPageVO[]>>({
-      url: `${USER_BASE_URL}/page`,
-      method: "get",
+    return http.get<any, PageResult<UserPageVO[]>>(`${USER_BASE_URL}/page`, {
       params: queryParams,
     });
   },
@@ -35,10 +30,7 @@ const UserAPI = {
    * @returns 用户表单详情
    */
   getFormData(userId: string) {
-    return http<any, UserForm>({
-      url: `${USER_BASE_URL}/${userId}/form`,
-      method: "get",
-    });
+    return http.get<any, UserForm>(`${USER_BASE_URL}/${userId}/form`);
   },
 
   /**
@@ -47,11 +39,7 @@ const UserAPI = {
    * @param data 用户表单数据
    */
   create(data: UserForm) {
-    return http({
-      url: `${USER_BASE_URL}`,
-      method: "post",
-      data,
-    });
+    return http.post(`${USER_BASE_URL}`, data);
   },
 
   /**
@@ -61,11 +49,7 @@ const UserAPI = {
    * @param data 用户表单数据
    */
   update(id: string, data: UserForm) {
-    return http({
-      url: `${USER_BASE_URL}/${id}`,
-      method: "put",
-      data,
-    });
+    return http.put(`${USER_BASE_URL}/${id}`, data);
   },
 
   /**
@@ -75,11 +59,13 @@ const UserAPI = {
    * @param password 新密码
    */
   resetPassword(id: string, password: string) {
-    return http({
-      url: `${USER_BASE_URL}/${id}/password/reset`,
-      method: "put",
-      params: { password },
-    });
+    return http.put(
+      `${USER_BASE_URL}/${id}/password/reset`,
+      {},
+      {
+        params: { password },
+      }
+    );
   },
 
   /**
@@ -88,17 +74,12 @@ const UserAPI = {
    * @param ids 用户ID字符串，多个以英文逗号(,)分割
    */
   deleteByIds(ids: string) {
-    return http({
-      url: `${USER_BASE_URL}/${ids}`,
-      method: "delete",
-    });
+    return http.delete(`${USER_BASE_URL}/${ids}`);
   },
 
   /** 下载用户导入模板 */
   downloadTemplate() {
-    return http({
-      url: `${USER_BASE_URL}/template`,
-      method: "get",
+    return http.get(`${USER_BASE_URL}/template`, {
       responseType: "blob",
     });
   },
@@ -109,9 +90,7 @@ const UserAPI = {
    * @param queryParams 查询参数
    */
   export(queryParams: UserPageQuery) {
-    return http({
-      url: `${USER_BASE_URL}/export`,
-      method: "get",
+    return http.get(`${USER_BASE_URL}/export`, {
       params: queryParams,
       responseType: "blob",
     });
@@ -126,11 +105,9 @@ const UserAPI = {
   import(deptId: string, file: File) {
     const formData = new FormData();
     formData.append("file", file);
-    return http<any, ExcelResult>({
-      url: `${USER_BASE_URL}/import`,
-      method: "post",
+
+    return http.post<any, ExcelResult>(`${USER_BASE_URL}/import`, formData, {
       params: { deptId },
-      data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -139,74 +116,56 @@ const UserAPI = {
 
   /** 获取个人中心用户信息 */
   getProfile() {
-    return http<any, UserProfileVO>({
-      url: `${USER_BASE_URL}/profile`,
-      method: "get",
-    });
+    return http.get<any, UserProfileVO>(`${USER_BASE_URL}/profile`);
   },
 
   /** 修改个人中心用户信息 */
   updateProfile(data: UserProfileForm) {
-    return http({
-      url: `${USER_BASE_URL}/profile`,
-      method: "put",
-      data,
-    });
+    return http.put(`${USER_BASE_URL}/profile`, data);
   },
 
   /** 修改个人中心用户密码 */
   changePassword(data: PasswordChangeForm) {
-    return http({
-      url: `${USER_BASE_URL}/password`,
-      method: "put",
-      data,
-    });
+    return http.put(`${USER_BASE_URL}/password`, data);
   },
 
   /** 发送短信验证码（绑定或更换手机号）*/
   sendMobileCode(mobile: string) {
-    return http({
-      url: `${USER_BASE_URL}/mobile/code`,
-      method: "post",
-      params: { mobile },
-    });
+    return http.post(
+      `${USER_BASE_URL}/mobile/code`,
+      {},
+      {
+        params: { mobile },
+      }
+    );
   },
 
   /** 绑定或更换手机号 */
   bindOrChangeMobile(data: MobileUpdateForm) {
-    return http({
-      url: `${USER_BASE_URL}/mobile`,
-      method: "put",
-      data,
-    });
+    return http.put(`${USER_BASE_URL}/mobile`, data);
   },
 
   /** 发送邮箱验证码（绑定或更换邮箱）*/
   sendEmailCode(email: string) {
-    return http({
-      url: `${USER_BASE_URL}/email/code`,
-      method: "post",
-      params: { email },
-    });
+    return http.post(
+      `${USER_BASE_URL}/email/code`,
+      {},
+      {
+        params: { email },
+      }
+    );
   },
 
   /** 绑定或更换邮箱 */
   bindOrChangeEmail(data: EmailUpdateForm) {
-    return http({
-      url: `${USER_BASE_URL}/email`,
-      method: "put",
-      data,
-    });
+    return http.put(`${USER_BASE_URL}/email`, data);
   },
 
   /**
    *  获取用户下拉列表
    */
   getOptions() {
-    return http<any, OptionType[]>({
-      url: `${USER_BASE_URL}/options`,
-      method: "get",
-    });
+    return http.get<any, OptionType[]>(`${USER_BASE_URL}/options`, {});
   },
 };
 

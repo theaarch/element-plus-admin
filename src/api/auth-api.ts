@@ -10,10 +10,8 @@ const AuthAPI = {
     formData.append("password", data.password);
     formData.append("captchaKey", data.captchaKey);
     formData.append("captchaCode", data.captchaCode);
-    return http<any, LoginResult>({
-      url: `${AUTH_BASE_URL}/login`,
-      method: "post",
-      data: formData,
+
+    return http.post<any, LoginResult>(`${AUTH_BASE_URL}/login`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -22,30 +20,26 @@ const AuthAPI = {
 
   /** 刷新 token 接口*/
   refreshToken(refreshToken: string) {
-    return http<any, LoginResult>({
-      url: `${AUTH_BASE_URL}/refresh-token`,
-      method: "post",
-      params: { refreshToken },
-      headers: {
-        Authorization: "no-auth",
-      },
-    });
+    return http.post<any, LoginResult>(
+      `${AUTH_BASE_URL}/refresh-token`,
+      {},
+      {
+        params: { refreshToken },
+        headers: {
+          Authorization: "no-auth",
+        },
+      }
+    );
   },
 
   /** 退出登录接口 */
   logout() {
-    return http({
-      url: `${AUTH_BASE_URL}/logout`,
-      method: "delete",
-    });
+    return http.delete(`${AUTH_BASE_URL}/logout`);
   },
 
   /** 获取验证码接口*/
   getCaptcha() {
-    return http<any, CaptchaInfo>({
-      url: `${AUTH_BASE_URL}/captcha`,
-      method: "get",
-    });
+    return http.get<any, CaptchaInfo>(`${AUTH_BASE_URL}/captcha`);
   },
 };
 

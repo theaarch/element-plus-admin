@@ -5,66 +5,66 @@ const DICT_BASE_URL = "/api/v1/dicts";
 const DictAPI = {
   /** 字典分页列表 */
   getPage(queryParams: DictPageQuery) {
-    return http<any, PageResult<DictPageVO[]>>({
-      url: `${DICT_BASE_URL}/page`,
-      method: "get",
+    return http.get<any, PageResult<DictPageVO[]>>(`${DICT_BASE_URL}/page`, {
       params: queryParams,
     });
   },
+
   /** 字典列表 */
   getList() {
-    return http<any, OptionType[]>({ url: `${DICT_BASE_URL}`, method: "get" });
+    return http.get<any, OptionType[]>(`${DICT_BASE_URL}`);
   },
+
   /** 字典表单数据 */
   getFormData(id: string) {
-    return http<any, DictForm>({ url: `${DICT_BASE_URL}/${id}/form`, method: "get" });
+    return http.get<any, DictForm>(`${DICT_BASE_URL}/${id}/form`);
   },
+
   /** 新增字典 */
   create(data: DictForm) {
-    return http({ url: `${DICT_BASE_URL}`, method: "post", data });
+    return http.post(`${DICT_BASE_URL}`, data);
   },
+
   /** 修改字典 */
   update(id: string, data: DictForm) {
-    return http({ url: `${DICT_BASE_URL}/${id}`, method: "put", data });
+    return http.put(`${DICT_BASE_URL}/${id}`, data);
   },
+
   /** 删除字典 */
   deleteByIds(ids: string) {
-    return http({ url: `${DICT_BASE_URL}/${ids}`, method: "delete" });
+    return http.delete(`${DICT_BASE_URL}/${ids}`);
   },
 
   /** 获取字典项分页列表 */
   getDictItemPage(dictCode: string, queryParams: DictItemPageQuery) {
-    return http<any, PageResult<DictItemPageVO[]>>({
-      url: `${DICT_BASE_URL}/${dictCode}/items/page`,
-      method: "get",
+    return http.get<any, PageResult<DictItemPageVO[]>>(`${DICT_BASE_URL}/${dictCode}/items/page`, {
       params: queryParams,
     });
   },
+
   /** 获取字典项列表 */
   getDictItems(dictCode: string) {
-    return http<any, DictItemOption[]>({
-      url: `${DICT_BASE_URL}/${dictCode}/items`,
-      method: "get",
-    });
+    return http.get<any, DictItemOption[]>(`${DICT_BASE_URL}/${dictCode}/items`);
   },
+
   /** 新增字典项 */
   createDictItem(dictCode: string, data: DictItemForm) {
-    return http({ url: `${DICT_BASE_URL}/${dictCode}/items`, method: "post", data });
+    return http.post(`${DICT_BASE_URL}/${dictCode}/items`, data);
   },
+
   /** 获取字典项表单数据 */
   getDictItemFormData(dictCode: string, id: string) {
-    return http<any, DictItemForm>({
-      url: `${DICT_BASE_URL}/${dictCode}/items/${id}/form`,
-      method: "get",
-    });
+    return http.get<any, DictItemForm>(`${DICT_BASE_URL}/${dictCode}/items/${id}/form`);
   },
+
   /** 修改字典项 */
   updateDictItem(dictCode: string, id: string, data: DictItemForm) {
-    return http({ url: `${DICT_BASE_URL}/${dictCode}/items/${id}`, method: "put", data });
+    return http.put(`${DICT_BASE_URL}/${dictCode}/items/${id}`, data);
   },
+
   /** 删除字典项 */
   deleteDictItems(dictCode: string, ids: string) {
-    return http({ url: `${DICT_BASE_URL}/${dictCode}/items/${ids}`, method: "delete" });
+    return http.delete(`${DICT_BASE_URL}/${dictCode}/items/${ids}`);
   },
 };
 
@@ -76,6 +76,7 @@ export interface DictPageQuery extends PageQuery {
   /** 状态(1:启用;0:禁用) */
   status?: number;
 }
+
 export interface DictPageVO {
   /** 字典ID */
   id: string;
@@ -86,6 +87,7 @@ export interface DictPageVO {
   /** 状态(1:启用;0:禁用) */
   status: number;
 }
+
 export interface DictForm {
   /** 字典ID(新增不填) */
   id?: string;
@@ -98,12 +100,14 @@ export interface DictForm {
   /** 备注 */
   remark?: string;
 }
+
 export interface DictItemPageQuery extends PageQuery {
   /** 搜索关键字 */
   keywords?: string;
   /** 字典编码 */
   dictCode?: string;
 }
+
 export interface DictItemPageVO {
   /** 字典项ID */
   id: string;
@@ -118,6 +122,7 @@ export interface DictItemPageVO {
   /** 排序 */
   sort?: number;
 }
+
 export interface DictItemForm {
   /** 字典项ID(新增不填) */
   id?: string;
@@ -134,6 +139,7 @@ export interface DictItemForm {
   /** 标签类型 */
   tagType?: "success" | "warning" | "info" | "primary" | "danger" | "";
 }
+
 export interface DictItemOption {
   /** 值 */
   value: number | string;

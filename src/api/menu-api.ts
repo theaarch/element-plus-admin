@@ -44,71 +44,71 @@ const MenuAPI = {
 export default MenuAPI;
 
 export interface MenuQuery {
-  /** 搜索关键字 */
+  // 搜索关键字
   keywords?: string;
 }
 
 import type { MenuTypeEnum } from "@/enums/system/menu-enum";
 
 export interface MenuVO {
-  /** 子菜单 */
+  // 子菜单
   children?: MenuVO[];
-  /** 组件路径 */
+  // 组件路径
   component?: string;
-  /** ICON */
+  // ICON
   icon?: string;
-  /** 菜单ID */
+  // 菜单ID
   id?: string;
-  /** 菜单名称 */
+  // 菜单名称
   name?: string;
-  /** 父菜单ID */
+  // 父菜单ID
   parentId?: string;
-  /** 按钮权限标识 */
+  // 按钮权限标识
   perm?: string;
-  /** 跳转路径 */
+  // 跳转路径
   redirect?: string;
-  /** 路由名称 */
+  // 路由名称
   routeName?: string;
-  /** 路由相对路径 */
+  // 路由相对路径
   routePath?: string;
-  /** 菜单排序(数字越小排名越靠前) */
+  // 菜单排序(数字越小排名越靠前)
   sort?: number;
-  /** 菜单类型 */
+  // 菜单类型
   type?: MenuTypeEnum;
-  /** 是否可见(1:显示;0:隐藏) */
+  // 是否可见(1:显示;0:隐藏)
   visible?: number;
 }
 
 export interface MenuForm {
-  /** 菜单ID */
+  // 菜单ID
   id?: string;
-  /** 父菜单ID */
+  // 父菜单ID
   parentId?: string;
-  /** 菜单名称 */
+  // 菜单名称
   name?: string;
-  /** 是否可见(1-是 0-否) */
+  // 是否可见(1-是 0-否)
   visible: number;
-  /** ICON */
+  // ICON
   icon?: string;
-  /** 排序 */
+  // 排序
   sort?: number;
-  /** 路由名称 */
+  // 路由名称
   routeName?: string;
-  /** 路由路径 */
+  // 路由路径
   routePath?: string;
-  /** 组件路径 */
+  // 组件路径
   component?: string;
-  /** 跳转路由路径 */
+  // 跳转路由路径
   redirect?: string;
-  /** 菜单类型 */
+  // 菜单类型
   type?: MenuTypeEnum;
-  /** 权限标识 */
+  // 权限标识
   perm?: string;
-  /** 【菜单】是否开启页面缓存 */
+  // 【菜单】是否开启页面缓存
   keepAlive?: number;
-  /** 【目录】只有一个子路由是否始终显示 */
+  // 【目录】只有一个子路由是否始终显示
   alwaysShow?: number;
-  /** 其他参数 */
+  // 其他参数
   params?: KeyValue[];
 }
 
@@ -118,29 +118,29 @@ interface KeyValue {
 }
 
 export interface RouteVO {
-  /** 子路由列表 */
+  // 子路由列表
   children: RouteVO[];
-  /** 组件路径 */
+  // 组件路径
   component?: string;
-  /** 路由属性 */
+  // 路由属性
   meta?: Meta;
-  /** 路由名称 */
+  // 路由名称
   name?: string;
-  /** 路由路径 */
+  // 路由路径
   path?: string;
-  /** 跳转链接 */
+  // 跳转链接
   redirect?: string;
 }
 
 export interface Meta {
-  /** 【目录】只有一个子路由是否始终显示 */
+  // 【目录】只有一个子路由是否始终显示
   alwaysShow?: boolean;
-  /** 是否隐藏(true-是 false-否) */
+  // 是否隐藏(true-是 false-否)
   hidden?: boolean;
-  /** ICON */
+  // ICON
   icon?: string;
-  /** 【菜单】是否开启页面缓存 */
+  // 【菜单】是否开启页面缓存
   keepAlive?: boolean;
-  /** 路由title */
+  // 路由title
   title?: string;
 }

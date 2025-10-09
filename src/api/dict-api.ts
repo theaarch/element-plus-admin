@@ -74,81 +74,81 @@ const DictAPI = {
 export default DictAPI;
 
 export interface DictPageQuery extends PageQuery {
-  /** 搜索关键字 */
+  // 搜索关键字
   keywords?: string;
-  /** 状态(1:启用;0:禁用) */
+  // 状态(1:启用;0:禁用)
   status?: number;
 }
 
 export interface DictPageVO {
-  /** 字典ID */
+  // 字典ID
   id: string;
-  /** 字典名称 */
+  // 字典名称
   name: string;
-  /** 字典编码 */
+  // 字典编码
   dictCode: string;
-  /** 状态(1:启用;0:禁用) */
+  // 状态(1:启用;0:禁用)
   status: number;
 }
 
 export interface DictForm {
-  /** 字典ID(新增不填) */
+  // 字典ID(新增不填)
   id?: string;
-  /** 字典名称 */
+  // 字典名称
   name?: string;
-  /** 字典编码 */
+  // 字典编码
   dictCode?: string;
-  /** 状态(1:启用;0:禁用) */
+  // 状态(1:启用;0:禁用)
   status?: number;
-  /** 备注 */
+  // 备注
   remark?: string;
 }
 
 export interface DictItemPageQuery extends PageQuery {
-  /** 搜索关键字 */
+  // 搜索关键字
   keywords?: string;
-  /** 字典编码 */
+  // 字典编码
   dictCode?: string;
 }
 
 export interface DictItemPageVO {
-  /** 字典项ID */
+  // 字典项ID
   id: string;
-  /** 字典编码 */
+  // 字典编码
   dictCode: string;
-  /** 字典项值 */
+  // 字典项值
   value: string;
-  /** 字典项标签 */
+  // 字典项标签
   label: string;
-  /** 状态(1:启用;0:禁用) */
+  // 状态(1:启用;0:禁用)
   status: number;
-  /** 排序 */
+  // 排序
   sort?: number;
 }
 
 export interface DictItemForm {
-  /** 字典项ID(新增不填) */
+  // 字典项ID(新增不填)
   id?: string;
-  /** 字典编码 */
+  // 字典编码
   dictCode?: string;
-  /** 字典项值 */
+  // 字典项值
   value?: string;
-  /** 字典项标签 */
+  // 字典项标签
   label?: string;
-  /** 状态(1:启用;0:禁用) */
+  // 状态(1:启用;0:禁用)
   status?: number;
-  /** 排序 */
+  // 排序
   sort?: number;
-  /** 标签类型 */
+  // 标签类型
   tagType?: "success" | "warning" | "info" | "primary" | "danger" | "";
 }
 
 export interface DictItemOption {
-  /** 值 */
+  // 值
   value: number | string;
-  /** 标签 */
+  // 标签
   label: string;
-  /** 标签类型 */
+  // 标签类型
   tagType?: "" | "success" | "info" | "warning" | "danger";
   [key: string]: any;
 }

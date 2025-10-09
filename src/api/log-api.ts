@@ -26,66 +26,66 @@ const LogAPI = {
 export default LogAPI;
 
 export interface LogPageQuery extends PageQuery {
-  /** 搜索关键字 */
+  // 搜索关键字
   keywords?: string;
-  /** 操作时间 */
+  // 操作时间
   createTime?: [string, string];
 }
 
 export interface LogPageVO {
-  /** 主键 */
+  // 主键
   id: string;
-  /** 日志模块 */
+  // 日志模块
   module: string;
-  /** 日志内容 */
+  // 日志内容
   content: string;
-  /** 请求路径 */
+  // 请求路径
   requestUri: string;
-  /** 请求方法 */
+  // 请求方法
   method: string;
-  /** IP 地址 */
+  // IP 地址
   ip: string;
-  /** 地区 */
+  // 地区
   region: string;
-  /** 浏览器 */
+  // 浏览器
   browser: string;
-  /** 终端系统 */
+  // 终端系统
   os: string;
-  /** 执行时间(毫秒) */
+  // 执行时间(毫秒)
   executionTime: number;
-  /** 操作人 */
+  // 操作人
   operator: string;
 }
 
 export interface VisitTrendVO {
-  /** 日期列表 */
+  // 日期列表
   dates: string[];
-  /** 浏览量(PV) */
+  // 浏览量(PV)
   pvList: number[];
-  /** 访客数(UV) */
+  // 访客数(UV)
   uvList: number[];
-  /** IP数 */
+  // IP数
   ipList: number[];
 }
 
 export interface VisitTrendQuery {
-  /** 开始日期 */
+  // 开始日期
   startDate: string;
-  /** 结束日期 */
+  // 结束日期
   endDate: string;
 }
 
 export interface VisitStatsVO {
-  /** 今日访客数(UV) */
+  // 今日访客数(UV)
   todayUvCount: number;
-  /** 总访客数 */
+  // 总访客数
   totalUvCount: number;
-  /** 访客数同比增长率（相对于昨天同一时间段的增长率） */
+  // 访客数同比增长率（相对于昨天同一时间段的增长率）
   uvGrowthRate: number;
-  /** 今日浏览量(PV) */
+  // 今日浏览量(PV)
   todayPvCount: number;
-  /** 总浏览量 */
+  // 总浏览量
   totalPvCount: number;
-  /** 同比增长率（相对于昨天同一时间段的增长率） */
+  // 同比增长率（相对于昨天同一时间段的增长率）
   pvGrowthRate: number;
 }

@@ -49,38 +49,38 @@ const RoleAPI = {
 export default RoleAPI;
 
 export interface RolePageQuery extends PageQuery {
-  /** 搜索关键字 */
+  // 搜索关键字
   keywords?: string;
 }
 
 export interface RolePageVO {
-  /** 角色ID */
+  // 角色ID
   id?: string;
-  /** 角色编码 */
+  // 角色编码
   code?: string;
-  /** 角色名称 */
+  // 角色名称
   name?: string;
-  /** 排序 */
+  // 排序
   sort?: number;
-  /** 角色状态 */
+  // 角色状态
   status?: number;
-  /** 创建时间 */
+  // 创建时间
   createTime?: Date;
-  /** 修改时间 */
+  // 修改时间
   updateTime?: Date;
 }
 
 export interface RoleForm {
-  /** 角色ID */
+  // 角色ID
   id?: string;
-  /** 角色编码 */
+  // 角色编码
   code?: string;
-  /** 数据权限 */
+  // 数据权限
   dataScope?: number;
-  /** 角色名称 */
+  // 角色名称
   name?: string;
-  /** 排序 */
+  // 排序
   sort?: number;
-  /** 角色状态(1-正常；0-停用) */
+  // 角色状态(1-正常；0-停用)
   status?: number;
 }

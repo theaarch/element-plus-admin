@@ -4,61 +4,34 @@ import { AxiosResponse } from "axios";
 const USER_BASE_URL = "/api/v1/users";
 
 const UserAPI = {
-  /**
-   * 获取当前登录用户信息
-   *
-   * @returns 登录用户昵称、头像信息，包括角色和权限
-   */
+  /** 获取当前登录用户信息 */
   getInfo(): Promise<ApiResponse<UserInfo>> {
     return http.get(`${USER_BASE_URL}/me`);
   },
 
-  /**
-   * 获取用户分页列表
-   *
-   * @param queryParams 查询参数
-   */
+  /** 获取用户分页列表 */
   getPage(queryParams: UserPageQuery): Promise<ApiResponse<PageResult<UserPageVO>>> {
     return http.get(`${USER_BASE_URL}/page`, {
       params: queryParams,
     });
   },
 
-  /**
-   * 获取用户表单详情
-   *
-   * @param userId 用户ID
-   * @returns 用户表单详情
-   */
+  /** 获取用户表单详情 */
   getFormData(userId: string): Promise<ApiResponse<UserForm>> {
     return http.get(`${USER_BASE_URL}/${userId}/form`);
   },
 
-  /**
-   * 添加用户
-   *
-   * @param data 用户表单数据
-   */
+  /** 添加用户 */
   create(data: UserForm): Promise<ApiResponse<void>> {
     return http.post(`${USER_BASE_URL}`, data);
   },
 
-  /**
-   * 修改用户
-   *
-   * @param id 用户ID
-   * @param data 用户表单数据
-   */
+  /**  修改用户 */
   update(id: string, data: UserForm): Promise<ApiResponse<void>> {
     return http.put(`${USER_BASE_URL}/${id}`, data);
   },
 
-  /**
-   * 修改用户密码
-   *
-   * @param id 用户ID
-   * @param password 新密码
-   */
+  /** 修改用户密码 */
   resetPassword(id: string, password: string): Promise<ApiResponse<void>> {
     return http.put(
       `${USER_BASE_URL}/${id}/password/reset`,
@@ -69,11 +42,7 @@ const UserAPI = {
     );
   },
 
-  /**
-   * 批量删除用户，多个以英文逗号(,)分割
-   *
-   * @param ids 用户ID字符串，多个以英文逗号(,)分割
-   */
+  /** 批量删除用户，多个以英文逗号(,)分割 */
   deleteByIds(ids: string): Promise<ApiResponse<void>> {
     return http.delete(`${USER_BASE_URL}/${ids}`);
   },
@@ -85,11 +54,7 @@ const UserAPI = {
     });
   },
 
-  /**
-   * 导出用户
-   *
-   * @param queryParams 查询参数
-   */
+  /** 导出用户  */
   export(queryParams: UserPageQuery): Promise<AxiosResponse<Blob>> {
     return http.get(`${USER_BASE_URL}/export`, {
       params: queryParams,
@@ -97,12 +62,7 @@ const UserAPI = {
     });
   },
 
-  /**
-   * 导入用户
-   *
-   * @param deptId 部门ID
-   * @param file 导入文件
-   */
+  /** 导入用户 */
   import(deptId: string, file: File): Promise<ApiResponse<ExcelResult>> {
     const formData = new FormData();
 
@@ -173,173 +133,162 @@ const UserAPI = {
 
 export default UserAPI;
 
-/** 登录用户信息 */
 export interface UserInfo {
-  /** 用户ID */
+  // 用户ID
   userId?: string;
 
-  /** 用户名 */
+  // 用户名
   username?: string;
 
-  /** 昵称 */
+  // 昵称
   nickname?: string;
 
-  /** 头像URL */
+  // 头像URL
   avatar?: string;
 
-  /** 角色 */
+  // 角色
   roles: string[];
 
-  /** 权限 */
+  // 权限
   perms: string[];
 }
 
-/**
- * 用户分页查询对象
- */
 export interface UserPageQuery extends PageQuery {
-  /** 搜索关键字 */
+  // 搜索关键字
   keywords?: string;
 
-  /** 用户状态 */
+  // 用户状态
   status?: number;
 
-  /** 部门ID */
+  // 部门ID
   deptId?: string;
 
-  /** 开始时间 */
+  // 开始时间
   createTime?: [string, string];
 }
 
-/** 用户分页对象 */
 export interface UserPageVO {
-  /** 用户ID */
+  // 用户ID
   id: string;
-  /** 用户头像URL */
+  // 用户头像URL
   avatar?: string;
-  /** 创建时间 */
+  // 创建时间
   createTime?: Date;
-  /** 部门名称 */
+  // 部门名称
   deptName?: string;
-  /** 用户邮箱 */
+  // 用户邮箱
   email?: string;
-  /** 性别 */
+  // 性别
   gender?: number;
-  /** 手机号 */
+  // 手机号
   mobile?: string;
-  /** 用户昵称 */
+  // 用户昵称
   nickname?: string;
-  /** 角色名称，多个使用英文逗号(,)分割 */
+  // 角色名称，多个使用英文逗号(,)分割
   roleNames?: string;
-  /** 用户状态(1:启用;0:禁用) */
+  // 用户状态(1:启用;0:禁用)
   status?: number;
-  /** 用户名 */
+  // 用户名
   username?: string;
 }
 
-/** 用户表单类型 */
 export interface UserForm {
-  /** 用户ID */
+  // 用户ID
   id?: string;
-  /** 用户头像 */
+  // 用户头像
   avatar?: string;
-  /** 部门ID */
+  // 部门ID
   deptId?: string;
-  /** 邮箱 */
+  // 邮箱
   email?: string;
-  /** 性别 */
+  // 性别
   gender?: number;
-  /** 手机号 */
+  // 手机号
   mobile?: string;
-  /** 昵称 */
+  // 昵称
   nickname?: string;
-  /** 角色ID集合 */
+  // 角色ID集合
   roleIds?: number[];
-  /** 用户状态(1:正常;0:禁用) */
+  // 用户状态(1:正常;0:禁用)
   status?: number;
-  /** 用户名 */
+  // 用户名
   username?: string;
 }
 
-/** 个人中心用户信息 */
 export interface UserProfileVO {
-  /** 用户ID */
+  // 用户ID
   id?: string;
 
-  /** 用户名 */
+  // 用户名
   username?: string;
 
-  /** 昵称 */
+  // 昵称
   nickname?: string;
 
-  /** 头像URL */
+  // 头像URL
   avatar?: string;
 
-  /** 性别 */
+  // 性别
   gender?: number;
 
-  /** 手机号 */
+  // 手机号
   mobile?: string;
 
-  /** 邮箱 */
+  // 邮箱
   email?: string;
 
-  /** 部门名称 */
+  // 部门名称
   deptName?: string;
 
-  /** 角色名称，多个使用英文逗号(,)分割 */
+  // 角色名称，多个使用英文逗号(,)分割
   roleNames?: string;
 
-  /** 创建时间 */
+  // 创建时间
   createTime?: Date;
 }
 
-/** 个人中心用户信息表单 */
 export interface UserProfileForm {
-  /** 用户ID */
+  // 用户ID
   id?: string;
 
-  /** 用户名 */
+  // 用户名
   username?: string;
 
-  /** 昵称 */
+  // 昵称
   nickname?: string;
 
-  /** 头像URL */
+  // 头像URL
   avatar?: string;
 
-  /** 性别 */
+  // 性别
   gender?: number;
 
-  /** 手机号 */
+  // 手机号
   mobile?: string;
 
-  /** 邮箱 */
+  // 邮箱
   email?: string;
 }
 
-/** 修改密码表单 */
 export interface PasswordChangeForm {
-  /** 原密码 */
+  // 原密码
   oldPassword?: string;
-  /** 新密码 */
+  // 新密码
   newPassword?: string;
-  /** 确认新密码 */
+  // 确认新密码
   confirmPassword?: string;
 }
 
-/** 修改手机表单 */
 export interface MobileUpdateForm {
-  /** 手机号 */
+  // 手机号
   mobile?: string;
-  /** 验证码 */
+  // 验证码
   code?: string;
 }
 
-/** 修改邮箱表单 */
 export interface EmailUpdateForm {
-  /** 邮箱 */
+  // 邮箱
   email?: string;
-  /** 验证码 */
+  // 验证码
   code?: string;
 }

@@ -37,44 +37,44 @@ const DeptAPI = {
 export default DeptAPI;
 
 export interface DeptQuery {
-  /** 搜索关键字 */
+  // 搜索关键字
   keywords?: string;
-  /** 状态 */
+  // 状态
   status?: number;
 }
 
 export interface DeptVO {
-  /** 子部门 */
+  // 子部门
   children?: DeptVO[];
-  /** 创建时间 */
+  // 创建时间
   createTime?: Date;
-  /** 部门ID */
+  // 部门ID
   id?: string;
-  /** 部门名称 */
+  // 部门名称
   name?: string;
-  /** 部门编号 */
+  // 部门编号
   code?: string;
-  /** 父部门ID */
+  // 父部门ID
   parentId?: string;
-  /** 排序 */
+  // 排序
   sort?: number;
-  /** 状态(1:启用；0:禁用) */
+  // 状态(1:启用；0:禁用)
   status?: number;
-  /** 修改时间 */
+  // 修改时间
   updateTime?: Date;
 }
 
 export interface DeptForm {
-  /** 部门ID(新增不填) */
+  // 部门ID(新增不填)
   id?: string;
-  /** 部门名称 */
+  // 部门名称
   name?: string;
-  /** 部门编号 */
+  // 部门编号
   code?: string;
-  /** 父部门ID */
+  // 父部门ID
   parentId: string;
-  /** 排序 */
+  // 排序
   sort?: number;
-  /** 状态(1:启用；0：禁用) */
+  // 状态(1:启用；0：禁用)
   status?: number;
 }

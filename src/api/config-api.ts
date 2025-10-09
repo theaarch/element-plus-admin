@@ -39,32 +39,32 @@ const ConfigAPI = {
 export default ConfigAPI;
 
 export interface ConfigPageQuery extends PageQuery {
-  /** 搜索关键字 */
+  // 搜索关键字
   keywords?: string;
 }
 
 export interface ConfigForm {
-  /** 主键 */
+  // 主键
   id?: string;
-  /** 配置名称 */
+  // 配置名称
   configName?: string;
-  /** 配置键 */
+  // 配置键
   configKey?: string;
-  /** 配置值 */
+  // 配置值
   configValue?: string;
-  /** 描述、备注 */
+  // 描述、备注
   remark?: string;
 }
 
 export interface ConfigPageVO {
-  /** 主键 */
+  // 主键
   id?: string;
-  /** 配置名称 */
+  // 配置名称
   configName?: string;
-  /** 配置键 */
+  // 配置键
   configKey?: string;
-  /** 配置值 */
+  // 配置值
   configValue?: string;
-  /** 描述、备注 */
+  // 描述、备注
   remark?: string;
 }

@@ -176,6 +176,7 @@ const codeLoading = ref(false);
 
 function getCaptcha() {
   codeLoading.value = true;
+
   AuthAPI.getCaptcha()
     .then((res) => {
       const data = res.data;

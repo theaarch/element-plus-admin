@@ -377,6 +377,7 @@ watch(onlineUserCount, (newCount, oldCount) => {
 // 格式化时间戳
 const formattedTime = computed(() => {
   if (!lastUpdateTime.value) return "--";
+
   return useDateFormat(lastUpdateTime, "HH:mm:ss").value;
 });
 
@@ -426,6 +427,7 @@ const currentDate = new Date();
 const greetings = computed(() => {
   const hours = currentDate.getHours();
   const nickname = userStore.userInfo.nickname;
+
   if (hours >= 6 && hours < 8) {
     return "晨起披衣出草堂，轩窗已自喜微凉🌅！";
   } else if (hours >= 8 && hours < 12) {
@@ -496,8 +498,10 @@ const visitTrendChartOptions = ref();
  */
 const fetchVisitStatsData = () => {
   LogAPI.getVisitStats()
-    .then((data) => {
-      visitStatsData.value = data.data;
+    .then((res) => {
+      const data = res.data;
+
+      visitStatsData.value = data;
     })
     .finally(() => {
       visitStatsLoading.value = false;
@@ -511,13 +515,16 @@ const fetchVisitTrendData = () => {
   const startDate = dayjs()
     .subtract(visitTrendDateRange.value - 1, "day")
     .toDate();
+
   const endDate = new Date();
 
   LogAPI.getVisitTrend({
     startDate: dayjs(startDate).format("YYYY-MM-DD"),
     endDate: dayjs(endDate).format("YYYY-MM-DD"),
-  }).then((data) => {
-    updateVisitTrendChartOptions(data.data);
+  }).then((res) => {
+    const data = res.data;
+
+    updateVisitTrendChartOptions(data);
   });
 };
 

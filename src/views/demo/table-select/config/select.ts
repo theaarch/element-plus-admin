@@ -81,7 +81,7 @@ const selectConfig: ISelectConfig = {
       },
     },
   ],
-  indexAction(params) {
+  async indexAction(params) {
     if ("createAt" in params) {
       const createAt = params.createAt as string[];
       if (createAt?.length > 1) {
@@ -90,7 +90,8 @@ const selectConfig: ISelectConfig = {
       }
       delete params.createAt;
     }
-    const response = UserAPI.getPage(params);
+
+    const response = await UserAPI.getPage(params);
     return response.data;
   },
   tableColumns: [

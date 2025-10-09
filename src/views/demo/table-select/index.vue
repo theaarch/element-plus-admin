@@ -54,6 +54,7 @@ const text = computed(() => {
   // 获取字典数据
   const dictData = dictStore.getDictItems("gender");
   const genderLabel = dictData.find((item: any) => item.value == selectedUser.value?.gender)?.label;
+
   return selectedUser.value
     ? `${selectedUser.value.username} - ${genderLabel} - ${selectedUser.value.deptName}`
     : "";

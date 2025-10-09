@@ -167,6 +167,7 @@ const computedRules = computed(() => {
     name: [{ required: true, message: "请输入字典名称", trigger: "blur" }],
     dictCode: [{ required: true, message: "请输入字典编码", trigger: "blur" }],
   };
+
   return rules;
 });
 

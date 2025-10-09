@@ -198,9 +198,11 @@ const computedRules = computed(() => {
 function fetchData() {
   loading.value = true;
   DictAPI.getDictItemPage(dictCode.value, queryParams)
-    .then((data) => {
-      tableData.value = data.data.list;
-      total.value = data.data.total;
+    .then((res) => {
+      const data = res.data;
+
+      tableData.value = data.list;
+      total.value = data.total;
     })
     .finally(() => {
       loading.value = false;
@@ -231,8 +233,10 @@ function handleOpenDialog(row?: DictItemPageVO) {
   dialog.title = row ? "编辑字典项" : "新增字典项";
 
   if (row?.id) {
-    DictAPI.getDictItemFormData(dictCode.value, row.id).then((data) => {
-      Object.assign(formData, data.data);
+    DictAPI.getDictItemFormData(dictCode.value, row.id).then((res) => {
+      const data = res.data;
+
+      Object.assign(formData, data);
     });
   }
 }
@@ -278,6 +282,7 @@ function handleCloseDialog() {
 
   dialog.visible = false;
 }
+
 /**
  * 删除字典
  *

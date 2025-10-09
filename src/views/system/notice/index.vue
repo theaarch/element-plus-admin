@@ -459,7 +459,9 @@ const closeDetailDialog = () => {
 };
 
 const openDetailDialog = async (id: string) => {
-  const noticeDetail = await NoticeAPI.getDetail(id);
+  const response = await NoticeAPI.getDetail(id);
+  const noticeDetail = response.data;
+
   currentNotice.value = noticeDetail;
   detailDialog.visible = true;
 };

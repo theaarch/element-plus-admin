@@ -146,6 +146,7 @@ const {
 // 其他工具栏
 function handleToolbarClick(name: string) {
   console.log(name);
+
   if (name === "custom1") {
     ElMessage.success("点击了自定义1按钮");
   }
@@ -158,12 +159,15 @@ const handleOperateClick = (data: IObject) => {
     handleViewClick(data.row, async () => {
       // 加载下拉数据源，建议在初始化配置项 initFn 中加载，避免多次请求
       // editModalConfig.formItems[2]!.attrs!.data = await DeptAPI.getOptions();
-      return await UserAPI.getFormData(data.row.id); // 根据ID获取详情
+
+      const response = await UserAPI.getFormData(data.row.id); // 根据ID获取详情
+      return response.data;
     });
   } else if (data.name === "edit") {
     editModalConfig.drawer = { ...editModalConfig.drawer, title: "修改" };
     handleEditClick(data.row, async () => {
-      return await UserAPI.getFormData(data.row.id); // 根据ID获取详情
+      const response = await UserAPI.getFormData(data.row.id); // 根据ID获取详情
+      return response.data;
     });
   } else if (data.name === "reset_pwd") {
     ElMessageBox.prompt("请输入用户「" + data.row.username + "」的新密码", "重置密码", {
@@ -182,6 +186,7 @@ const handleOperateClick = (data: IObject) => {
       .catch(() => {});
   }
 };
+
 const handleOperateClick2 = (data: IOperateData) => {
   if (data.name === "view") {
     editModalConfig.drawer = { ...editModalConfig.drawer, title: "查看" };
@@ -196,9 +201,11 @@ const handleOperateClick2 = (data: IOperateData) => {
 
 // 打开二级弹窗
 const addModalRef2 = ref();
+
 const openSecondModal = () => {
   handleAddClick(addModalRef2 as Ref<PageModalInstance>);
 };
+
 const secondSubmit = (formData: any) => {
   console.log("secondSubmit", formData);
   ElMessage.success("二级弹窗提交成功");

@@ -21,10 +21,11 @@ export const initOptions = async () => {
   try {
     // 使用Promise.all并行请求
     const [dept, roles] = await Promise.all([DeptAPI.getOptions(), RoleAPI.getOptions()]);
+
     // 获取部门选项并赋值
-    deptArr.value = dept;
+    deptArr.value = dept.data;
     // 获取角色选项并赋值
-    roleArr.value = roles;
+    roleArr.value = roles.data;
   } catch (error) {
     console.error("初始化选项失败:", error);
   }

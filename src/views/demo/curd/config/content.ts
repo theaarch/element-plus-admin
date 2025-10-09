@@ -21,9 +21,9 @@ const contentConfig: IContentConfig<UserPageQuery> = {
       list: res.list,
     };
   },
-  indexAction(params) {
-    const response = UserAPI.getPage(params);
-    return response;
+  async indexAction(params) {
+    const response = await UserAPI.getPage(params);
+    return response.data;
   },
   deleteAction: UserAPI.deleteByIds,
   importAction(file) {
@@ -39,8 +39,9 @@ const contentConfig: IContentConfig<UserPageQuery> = {
   async exportsAction(params) {
     // 模拟获取到的是全量数据
     const res = await UserAPI.getPage(params);
-    console.log("exportsAction", res.list);
-    return res.list;
+    console.log("exportsAction", res.data.list);
+
+    return res.data.list;
   },
   pk: "id",
   toolbar: [
@@ -81,7 +82,9 @@ const contentConfig: IContentConfig<UserPageQuery> = {
       filterMultiple: true,
       filterJoin: ",",
       async initFn(colItem) {
-        const roleOptions = await RoleAPI.getOptions();
+        const response = await RoleAPI.getOptions();
+        const roleOptions = response.data;
+
         colItem.filters = roleOptions.map((item) => {
           return { text: item.label, value: item.value };
         });

@@ -2,8 +2,8 @@ import type { RouteRecordRaw } from "vue-router";
 import { constantRoutes } from "@/router";
 import { store } from "@/store";
 import router from "@/router";
+import MenuAPI, { type RouteVO } from "@/api/menu-api";
 
-import MenuAPI, { type RouteVO } from "@/api/system/menu-api";
 const modules = import.meta.glob("../../views/**/**.vue");
 const Layout = () => import("@/layouts/index.vue");
 
@@ -20,7 +20,9 @@ export const usePermissionStore = defineStore("permission", () => {
    */
   async function generateRoutes(): Promise<RouteRecordRaw[]> {
     try {
-      const data = await MenuAPI.getRoutes(); // 获取当前登录人拥有的菜单路由
+      const response = await MenuAPI.getRoutes();
+
+      const data = response.data; // 获取当前登录人拥有的菜单路由
       const processRouteList = processRoutes(data); // 处理后的路由数据
       const dynamicRoutes = parseDynamicRoutes(processRouteList);
 

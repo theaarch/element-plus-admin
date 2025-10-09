@@ -1,4 +1,4 @@
-import request from "@/utils/request";
+import http from "@/utils/http";
 
 const AUTH_BASE_URL = "/api/v1/auth";
 
@@ -10,7 +10,7 @@ const AuthAPI = {
     formData.append("password", data.password);
     formData.append("captchaKey", data.captchaKey);
     formData.append("captchaCode", data.captchaCode);
-    return request<any, LoginResult>({
+    return http<any, LoginResult>({
       url: `${AUTH_BASE_URL}/login`,
       method: "post",
       data: formData,
@@ -22,7 +22,7 @@ const AuthAPI = {
 
   /** 刷新 token 接口*/
   refreshToken(refreshToken: string) {
-    return request<any, LoginResult>({
+    return http<any, LoginResult>({
       url: `${AUTH_BASE_URL}/refresh-token`,
       method: "post",
       params: { refreshToken },
@@ -34,7 +34,7 @@ const AuthAPI = {
 
   /** 退出登录接口 */
   logout() {
-    return request({
+    return http({
       url: `${AUTH_BASE_URL}/logout`,
       method: "delete",
     });
@@ -42,7 +42,7 @@ const AuthAPI = {
 
   /** 获取验证码接口*/
   getCaptcha() {
-    return request<any, CaptchaInfo>({
+    return http<any, CaptchaInfo>({
       url: `${AUTH_BASE_URL}/captcha`,
       method: "get",
     });

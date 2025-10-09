@@ -247,14 +247,16 @@
 import { useAppStore } from "@/store/modules/app-store";
 import { DeviceEnum } from "@/enums/settings/device-enum";
 
-import UserAPI, { UserForm, UserPageQuery, UserPageVO } from "@/api/system/user-api";
-import DeptAPI from "@/api/system/dept-api";
-import RoleAPI from "@/api/system/role-api";
+import UserAPI, { UserForm, UserPageQuery, UserPageVO } from "@/api/user-api";
+import DeptAPI from "@/api/dept-api";
+import RoleAPI from "@/api/role-api";
 
 import DeptTree from "./components/DeptTree.vue";
 import UserImport from "./components/UserImport.vue";
 import { useUserStore } from "@/store";
+
 const userStore = useUserStore();
+
 defineOptions({
   name: "User",
   inheritAttrs: false,
@@ -319,8 +321,8 @@ async function fetchData() {
   loading.value = true;
   try {
     const data = await UserAPI.getPage(queryParams);
-    pageData.value = data.list;
-    total.value = data.total;
+    pageData.value = data.data.list;
+    total.value = data.data.total;
   } finally {
     loading.value = false;
   }
@@ -382,7 +384,7 @@ async function handleOpenDialog(id?: string) {
   if (id) {
     dialog.title = "修改用户";
     UserAPI.getFormData(id).then((data) => {
-      Object.assign(formData, { ...data });
+      Object.assign(formData, { ...data.data });
     });
   } else {
     dialog.title = "新增用户";

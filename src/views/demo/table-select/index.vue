@@ -9,12 +9,14 @@
     >
       示例源码 请点击>>>>
     </el-link>
+
     <table-select :text="text" :select-config="selectConfig" @confirm-click="handleConfirm">
       <template #status="scope">
         <el-tag :type="scope.row[scope.prop] == 1 ? 'success' : 'info'">
           {{ scope.row[scope.prop] == 1 ? "启用" : "禁用" }}
         </el-tag>
       </template>
+
       <template #gender="scope">
         <DictLabel v-model="scope.row.gender" code="gender" />
       </template>
@@ -25,7 +27,9 @@
 <script setup lang="ts">
 import selectConfig from "./config/select";
 import { useDictStore } from "@/store";
+
 const dictStore = useDictStore();
+
 interface IUser {
   id: string;
   username: string;
@@ -39,10 +43,13 @@ interface IUser {
   roleNames: string;
   createTime: string;
 }
+
 const selectedUser = ref<IUser>();
+
 function handleConfirm(data: IUser[]) {
   selectedUser.value = data[0];
 }
+
 const text = computed(() => {
   // 获取字典数据
   const dictData = dictStore.getDictItems("gender");

@@ -354,7 +354,7 @@ defineOptions({
 });
 
 import { dayjs } from "element-plus";
-import LogAPI, { VisitStatsVO, VisitTrendVO } from "@/api/system/log-api";
+import LogAPI, { VisitStatsVO, VisitTrendVO } from "@/api/log-api";
 import { useUserStore } from "@/store/modules/user-store";
 import { formatGrowthRate } from "@/utils";
 import { useTransition, useDateFormat } from "@vueuse/core";
@@ -441,6 +441,7 @@ const greetings = computed(() => {
 
 // 访客统计数据加载状态
 const visitStatsLoading = ref(true);
+
 // 访客统计数据
 const visitStatsData = ref<VisitStatsVO>({
   todayUvCount: 0,
@@ -486,6 +487,7 @@ const transitionTotalPvCount = useTransition(
 
 // 访问趋势日期范围（单位：天）
 const visitTrendDateRange = ref(7);
+
 // 访问趋势图表配置
 const visitTrendChartOptions = ref();
 
@@ -495,7 +497,7 @@ const visitTrendChartOptions = ref();
 const fetchVisitStatsData = () => {
   LogAPI.getVisitStats()
     .then((data) => {
-      visitStatsData.value = data;
+      visitStatsData.value = data.data;
     })
     .finally(() => {
       visitStatsLoading.value = false;
@@ -515,7 +517,7 @@ const fetchVisitTrendData = () => {
     startDate: dayjs(startDate).format("YYYY-MM-DD"),
     endDate: dayjs(endDate).format("YYYY-MM-DD"),
   }).then((data) => {
-    updateVisitTrendChartOptions(data);
+    updateVisitTrendChartOptions(data.data);
   });
 };
 

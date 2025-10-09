@@ -449,6 +449,7 @@
         </el-button>
       </template>
     </el-drawer>
+
     <!-- 写入本地对话框 -->
     <el-dialog v-model="writeDialog.visible" title="写入本地" width="820px">
       <div class="space-y-3">
@@ -533,14 +534,15 @@ import GeneratorAPI, {
 } from "@/api/codegen-api";
 import { ElLoading } from "element-plus";
 
-import DictAPI from "@/api/system/dict-api";
-import MenuAPI from "@/api/system/menu-api";
+import DictAPI from "@/api/dict-api";
+import MenuAPI from "@/api/menu-api";
 
 interface TreeNode {
   label: string;
   content?: string;
   children?: TreeNode[];
 }
+
 const treeData = ref<TreeNode[]>([]);
 const previewScope = ref<"all" | "frontend" | "backend">("all");
 const previewTypeOptions = ["ts", "vue", "java", "xml"];
@@ -548,6 +550,7 @@ const previewTypes = ref<string[]>([...previewTypeOptions]);
 
 const filteredTreeData = computed<TreeNode[]>(() => {
   if (!treeData.value.length) return [];
+
   // 基于原树按 scope/types 过滤叶子节点
   const match = (label: string, parentPath: string[]): boolean => {
     // scope 过滤：根据路径初步判断
@@ -566,11 +569,14 @@ const filteredTreeData = computed<TreeNode[]>(() => {
     if (!node.children || node.children.length === 0) {
       return match(node.label, parents) ? { ...node } : null;
     }
+
     const nextParents = [...parents, node.label];
     const children = (node.children || [])
       .map((c) => cloneFilter(c, nextParents))
       .filter(Boolean) as TreeNode[];
+
     if (!children.length) return null;
+
     return { label: node.label, children };
   };
 
@@ -618,6 +624,7 @@ watch(
   (prefix) => {
     const table = genConfigFormData.value.tableName;
     if (!table) return;
+
     const p = prefix || "";
     const base = table.startsWith(p) ? table.slice(p.length) : table;
     // 将下划线分隔的表名转为帕斯卡命名
@@ -650,6 +657,7 @@ const frontendDirHandle = ref<any>(null);
 const backendDirHandle = ref<any>(null);
 const frontendDirName = ref("");
 const backendDirName = ref("");
+
 // 预览的原始文件列表（用于写盘）
 const lastPreviewFiles = ref<{ path: string; fileName: string; content: string }[]>([]);
 const needFrontend = computed(() =>
@@ -660,8 +668,10 @@ const needBackend = computed(() =>
 );
 const canWriteToLocal = computed(() => {
   if (!lastPreviewFiles.value.length) return false;
+
   const frontOk = needFrontend.value ? !!frontendDirHandle.value : true;
   const backOk = needBackend.value ? !!backendDirHandle.value : true;
+
   return frontOk && backOk;
 });
 
@@ -710,7 +720,9 @@ const initSort = () => {
   if (sortFlag.value) {
     return;
   }
+
   const table = document.querySelector(".elTableCustom .el-table__body-wrapper tbody");
+
   sortFlag.value = Sortable.create(<HTMLElement>table, {
     group: "shared",
     animation: 150,
@@ -729,6 +741,7 @@ const setNodeSort = (oldIndex: number, newIndex: number) => {
   // 使用arr复制一份表格数组数据
   const arr = Object.assign([], genConfigFormData.value.fieldConfigs);
   const currentRow = arr.splice(oldIndex, 1)[0];
+
   arr.splice(newIndex, 0, currentRow);
   arr.forEach((item: FieldConfig, index) => {
     item.fieldSort = index + 1;
@@ -750,7 +763,7 @@ function handlePrevClick() {
       loading.value = true;
       GeneratorAPI.getGenConfig(currentTableName.value)
         .then((data) => {
-          genConfigFormData.value = data;
+          genConfigFormData.value = data.data;
         })
         .finally(() => {
           loading.value = false;
@@ -758,6 +771,7 @@ function handlePrevClick() {
     });
     initSort();
   }
+
   if (active.value-- <= 0) active.value = 0;
 }
 
@@ -773,15 +787,19 @@ function handleNextClick() {
     }
     initSort();
   }
+
   if (active.value === 1) {
     // 保存生成配置
     const tableName = genConfigFormData.value.tableName;
+
     if (!tableName) {
       ElMessage.error("表名不能为空");
       return;
     }
+
     loading.value = true;
     loadingText.value = "代码生成中，请稍后...";
+
     GeneratorAPI.saveGenConfig(tableName, genConfigFormData.value)
       .then(() => {
         handlePreview(tableName);
@@ -797,6 +815,7 @@ function handleNextClick() {
     if (active.value++ >= 2) {
       active.value = 2;
     }
+
     if (active.value === 2) {
       const tableName = genConfigFormData.value.tableName;
       if (!tableName) {
@@ -813,8 +832,11 @@ function handleNextClick() {
 /** 查询 */
 function handleQuery() {
   loading.value = true;
+
   GeneratorAPI.getTablePage(queryParams)
-    .then((data) => {
+    .then((res) => {
+      const data = res.data;
+
       pageData.value = data.list;
       total.value = data.total;
     })
@@ -827,6 +849,7 @@ function handleQuery() {
 function handleResetQuery() {
   queryFormRef.value.resetFields();
   queryParams.pageNum = 1;
+
   handleQuery();
 }
 
@@ -835,11 +858,14 @@ async function handleOpenDialog(tableName: string) {
   dialog.visible = true;
   active.value = 0;
 
-  menuOptions.value = await MenuAPI.getOptions(true);
+  const response = await MenuAPI.getOptions(true);
+  menuOptions.value = response.data;
 
   currentTableName.value = tableName;
   // 获取字典数据
-  DictAPI.getList().then((data) => {
+  DictAPI.getList().then((res) => {
+    const data = res.data;
+
     dictOptions.value = data;
     loading.value = true;
     GeneratorAPI.getGenConfig(tableName)
@@ -885,6 +911,7 @@ type FieldConfigKey = "isShowInQuery" | "isShowInList" | "isShowInForm";
 
 function bulkSet(key: FieldConfigKey, value: 0 | 1) {
   const list = genConfigFormData.value?.fieldConfigs || [];
+
   list.forEach((row: any) => {
     // 只改已有字段，保持响应式
     row[key] = value;
@@ -893,6 +920,7 @@ function bulkSet(key: FieldConfigKey, value: 0 | 1) {
 
 const checkAllSelected = (key: keyof FieldConfig, isCheckAllRef: any) => {
   const fieldConfigs = genConfigFormData.value?.fieldConfigs || [];
+
   isCheckAllRef.value = fieldConfigs.every((row: FieldConfig) => row[key] === 1);
 };
 
@@ -903,9 +931,9 @@ function handlePreview(tableName: string) {
     .then((data) => {
       dialog.title = `代码生成 ${tableName}`;
       // 组装树形结构完善代码
-      const tree = buildTree(data);
+      const tree = buildTree(data.data);
       // 缓存原始数据用于写盘
-      lastPreviewFiles.value = data || [];
+      lastPreviewFiles.value = data.data || [];
       // 去掉根节点“前后端代码”，直接展示其 children 作为一级目录
       treeData.value = tree?.children ? [...tree.children] : [];
 
@@ -1000,12 +1028,14 @@ function findFirstLeafNode(node: TreeNode): TreeNode | null {
   if (!node.children || node.children.length === 0) {
     return node;
   }
+
   for (const child of node.children) {
     const leafNode = findFirstLeafNode(child);
     if (leafNode) {
       return leafNode;
     }
   }
+
   return null;
 }
 
@@ -1033,6 +1063,7 @@ function getFileTreeNodeIcon(label: string) {
   if (label.endsWith(".xml")) {
     return "xml";
   }
+
   return "file";
 }
 
@@ -1068,6 +1099,7 @@ const pickBackendDir = async () => {
 
 async function ensureDir(root: any, path: string[], force = true) {
   let current = root;
+
   for (const segment of path) {
     try {
       // @ts-ignore
@@ -1088,6 +1120,7 @@ async function ensureDir(root: any, path: string[], force = true) {
       }
     }
   }
+
   return current;
 }
 
@@ -1097,6 +1130,7 @@ async function writeFile(dirHandle: any, filePath: string, content: string) {
   const fileName = parts.pop()!;
   const folderSegments = parts;
   const targetDir = await ensureDir(dirHandle, folderSegments, true);
+
   // @ts-ignore
   let fileHandle;
   try {
@@ -1159,6 +1193,7 @@ function resolveRootForPath(p: string) {
   const normalized = p.replace(/\\/g, "/");
   const frontApp = genConfigFormData.value.frontendAppName;
   const backApp = genConfigFormData.value.backendAppName;
+
   if (
     (backApp && normalized.startsWith(`${backApp}/`)) ||
     normalized.includes("/src/main/") ||
@@ -1167,9 +1202,11 @@ function resolveRootForPath(p: string) {
   ) {
     return "backend" as const;
   }
+
   if ((frontApp && normalized.startsWith(`${frontApp}/`)) || normalized.startsWith("src/")) {
     return "frontend" as const;
   }
+
   // 默认前端
   return "frontend" as const;
 }
@@ -1178,7 +1215,9 @@ function stripProjectRoot(p: string) {
   const normalized = p.replace(/\\/g, "/");
   const frontApp = genConfigFormData.value.frontendAppName;
   const backApp = genConfigFormData.value.backendAppName;
+
   let rel = normalized;
+
   if (frontApp && normalized.startsWith(`${frontApp}/`)) {
     rel = normalized.slice(frontApp.length + 1);
   } else if (backApp && normalized.startsWith(`${backApp}/`)) {
@@ -1191,6 +1230,7 @@ function stripProjectRoot(p: string) {
       rel = normalized;
     }
   }
+
   return rel;
 }
 
@@ -1199,6 +1239,7 @@ const writeGeneratedCode = async () => {
     ElMessage.warning("当前浏览器不支持本地写入，请选择下载ZIP");
     return;
   }
+
   if (
     (needFrontend.value && !frontendDirHandle.value) ||
     (needBackend.value && !backendDirHandle.value)
@@ -1206,10 +1247,12 @@ const writeGeneratedCode = async () => {
     ElMessage.warning("请先选择所需的前端/后端目录");
     return;
   }
+
   if (!lastPreviewFiles.value.length) {
     ElMessage.warning("请先生成预览");
     return;
   }
+
   loading.value = true;
   const loadingSvc = ElLoading.service({
     lock: true,
@@ -1235,15 +1278,18 @@ const writeGeneratedCode = async () => {
   async function worker() {
     while (queue.length) {
       const item = queue.shift()!;
+
       try {
         const root = resolveRootForPath(item.path);
         const relativePath = stripProjectRoot(`${item.path}/${item.fileName}`);
         writeProgress.current = relativePath;
+
         if (overwriteMode.value === "ifChanged") {
           // 简单差异：已有文件内容与待写内容相同则跳过
           // @ts-ignore
           const targetRoot = root === "frontend" ? frontendDirHandle.value : backendDirHandle.value;
           const existsSame = await isSameFile(targetRoot, relativePath, item.content || "");
+
           if (existsSame) {
             // 视作成功但不写
             writeProgress.done++;
@@ -1251,6 +1297,7 @@ const writeGeneratedCode = async () => {
             continue;
           }
         }
+
         if (overwriteMode.value === "skip") {
           // @ts-ignore
           const targetRoot = root === "frontend" ? frontendDirHandle.value : backendDirHandle.value;
@@ -1261,6 +1308,7 @@ const writeGeneratedCode = async () => {
             continue;
           }
         }
+
         if (root === "frontend") {
           await writeFile(frontendDirHandle.value, relativePath, item.content || "");
           frontCount++;
@@ -1281,10 +1329,12 @@ const writeGeneratedCode = async () => {
   for (let i = 0; i < concurrency; i++) {
     workers.push(worker());
   }
+
   await Promise.all(workers);
   loading.value = false;
   loadingSvc.close();
   writeRunning.value = false;
+
   if (failed.length) {
     ElMessage.warning(
       `部分文件写入失败：${failed.length} 个，成功 前端 ${frontCount} 个/后端 ${backCount} 个。打开控制台查看详情`

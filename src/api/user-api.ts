@@ -1,4 +1,4 @@
-import request from "@/utils/request";
+import http from "@/utils/http";
 
 const USER_BASE_URL = "/api/v1/users";
 
@@ -9,7 +9,7 @@ const UserAPI = {
    * @returns 登录用户昵称、头像信息，包括角色和权限
    */
   getInfo() {
-    return request<any, UserInfo>({
+    return http<any, UserInfo>({
       url: `${USER_BASE_URL}/me`,
       method: "get",
     });
@@ -21,7 +21,7 @@ const UserAPI = {
    * @param queryParams 查询参数
    */
   getPage(queryParams: UserPageQuery) {
-    return request<any, PageResult<UserPageVO[]>>({
+    return http<any, PageResult<UserPageVO[]>>({
       url: `${USER_BASE_URL}/page`,
       method: "get",
       params: queryParams,
@@ -35,7 +35,7 @@ const UserAPI = {
    * @returns 用户表单详情
    */
   getFormData(userId: string) {
-    return request<any, UserForm>({
+    return http<any, UserForm>({
       url: `${USER_BASE_URL}/${userId}/form`,
       method: "get",
     });
@@ -47,7 +47,7 @@ const UserAPI = {
    * @param data 用户表单数据
    */
   create(data: UserForm) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}`,
       method: "post",
       data,
@@ -61,7 +61,7 @@ const UserAPI = {
    * @param data 用户表单数据
    */
   update(id: string, data: UserForm) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/${id}`,
       method: "put",
       data,
@@ -75,7 +75,7 @@ const UserAPI = {
    * @param password 新密码
    */
   resetPassword(id: string, password: string) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/${id}/password/reset`,
       method: "put",
       params: { password },
@@ -88,7 +88,7 @@ const UserAPI = {
    * @param ids 用户ID字符串，多个以英文逗号(,)分割
    */
   deleteByIds(ids: string) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/${ids}`,
       method: "delete",
     });
@@ -96,7 +96,7 @@ const UserAPI = {
 
   /** 下载用户导入模板 */
   downloadTemplate() {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/template`,
       method: "get",
       responseType: "blob",
@@ -109,7 +109,7 @@ const UserAPI = {
    * @param queryParams 查询参数
    */
   export(queryParams: UserPageQuery) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/export`,
       method: "get",
       params: queryParams,
@@ -126,7 +126,7 @@ const UserAPI = {
   import(deptId: string, file: File) {
     const formData = new FormData();
     formData.append("file", file);
-    return request<any, ExcelResult>({
+    return http<any, ExcelResult>({
       url: `${USER_BASE_URL}/import`,
       method: "post",
       params: { deptId },
@@ -139,7 +139,7 @@ const UserAPI = {
 
   /** 获取个人中心用户信息 */
   getProfile() {
-    return request<any, UserProfileVO>({
+    return http<any, UserProfileVO>({
       url: `${USER_BASE_URL}/profile`,
       method: "get",
     });
@@ -147,7 +147,7 @@ const UserAPI = {
 
   /** 修改个人中心用户信息 */
   updateProfile(data: UserProfileForm) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/profile`,
       method: "put",
       data,
@@ -156,7 +156,7 @@ const UserAPI = {
 
   /** 修改个人中心用户密码 */
   changePassword(data: PasswordChangeForm) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/password`,
       method: "put",
       data,
@@ -165,7 +165,7 @@ const UserAPI = {
 
   /** 发送短信验证码（绑定或更换手机号）*/
   sendMobileCode(mobile: string) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/mobile/code`,
       method: "post",
       params: { mobile },
@@ -174,7 +174,7 @@ const UserAPI = {
 
   /** 绑定或更换手机号 */
   bindOrChangeMobile(data: MobileUpdateForm) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/mobile`,
       method: "put",
       data,
@@ -183,7 +183,7 @@ const UserAPI = {
 
   /** 发送邮箱验证码（绑定或更换邮箱）*/
   sendEmailCode(email: string) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/email/code`,
       method: "post",
       params: { email },
@@ -192,7 +192,7 @@ const UserAPI = {
 
   /** 绑定或更换邮箱 */
   bindOrChangeEmail(data: EmailUpdateForm) {
-    return request({
+    return http({
       url: `${USER_BASE_URL}/email`,
       method: "put",
       data,
@@ -203,7 +203,7 @@ const UserAPI = {
    *  获取用户下拉列表
    */
   getOptions() {
-    return request<any, OptionType[]>({
+    return http<any, OptionType[]>({
       url: `${USER_BASE_URL}/options`,
       method: "get",
     });

@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import NoticeAPI, { NoticePageVO, NoticeDetailVO } from "@/api/system/notice-api";
+import NoticeAPI, { NoticePageVO, NoticeDetailVO } from "@/api/notice-api";
 import router from "@/router";
 
 const noticeList = ref<NoticePageVO[]>([]);
@@ -122,7 +122,7 @@ watch(
  */
 function featchMyNotice() {
   NoticeAPI.getMyNoticePage({ pageNum: 1, pageSize: 5, isRead: 0 }).then((data) => {
-    noticeList.value = data.list;
+    noticeList.value = data.data.list;
   });
 }
 
@@ -130,7 +130,7 @@ function featchMyNotice() {
 function handleReadNotice(id: string) {
   NoticeAPI.getDetail(id).then((data) => {
     noticeDialogVisible.value = true;
-    noticeDetail.value = data;
+    noticeDetail.value = data.data;
     // 标记为已读
     const index = noticeList.value.findIndex((notice) => notice.id === id);
     if (index >= 0) {

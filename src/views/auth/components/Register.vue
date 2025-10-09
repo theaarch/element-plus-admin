@@ -178,10 +178,13 @@ const rules = computed(() => {
 
 // 获取验证码
 const codeLoading = ref(false);
+
 function getCaptcha() {
   codeLoading.value = true;
   AuthAPI.getCaptcha()
-    .then((data) => {
+    .then((res) => {
+      const data = res.data;
+
       model.value.captchaKey = data.captchaKey;
       captchaBase64.value = data.captchaBase64;
     })

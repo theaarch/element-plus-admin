@@ -68,10 +68,10 @@
 </template>
 
 <script setup lang="ts">
-import UserAPI from "@/api/system/user-api";
-import DeptAPI from "@/api/system/dept-api";
-import RoleAPI from "@/api/system/role-api";
-import type { UserForm, UserPageQuery } from "@/api/system/user-api";
+import UserAPI from "@/api/user-api";
+import DeptAPI from "@/api/dept-api";
+import RoleAPI from "@/api/role-api";
+import type { UserForm, UserPageQuery } from "@/api/user-api";
 import type { IObject, IModalConfig, IContentConfig, ISearchConfig } from "@/components/CURD/types";
 import { DeviceEnum } from "@/enums/settings/device-enum";
 import { useAppStore } from "@/store";

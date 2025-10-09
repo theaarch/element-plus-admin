@@ -163,7 +163,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
-import DeptAPI, { DeptVO, DeptForm, DeptQuery } from "@/api/system/dept-api";
+import DeptAPI, { DeptVO, DeptForm, DeptQuery } from "@/api/dept-api";
 
 const queryFormRef = ref();
 const deptFormRef = ref();
@@ -195,7 +195,9 @@ const rules = reactive({
 // 查询部门
 function handleQuery() {
   loading.value = true;
-  DeptAPI.getList(queryParams).then((data) => {
+  DeptAPI.getList(queryParams).then((res) => {
+    const data = res.data;
+
     deptList.value = data;
     loading.value = false;
   });
@@ -220,7 +222,9 @@ function handleSelectionChange(selection: any) {
  */
 async function handleOpenDialog(parentId?: string, deptId?: string) {
   // 加载部门下拉数据
-  const data = await DeptAPI.getOptions();
+  const response = await DeptAPI.getOptions();
+  const data = response.data;
+
   deptOptions.value = [
     {
       value: "0",
@@ -232,7 +236,9 @@ async function handleOpenDialog(parentId?: string, deptId?: string) {
   dialog.visible = true;
   if (deptId) {
     dialog.title = "修改部门";
-    DeptAPI.getFormData(deptId).then((data) => {
+    DeptAPI.getFormData(deptId).then((res) => {
+      const data = res.data;
+
       Object.assign(formData, data);
     });
   } else {
@@ -247,6 +253,7 @@ function handleSubmit() {
     if (valid) {
       loading.value = true;
       const deptId = formData.id;
+
       if (deptId) {
         DeptAPI.update(deptId, formData)
           .then(() => {
@@ -284,6 +291,7 @@ function handleDelete(deptId?: number) {
   }).then(
     () => {
       loading.value = true;
+
       DeptAPI.deleteByIds(deptIds)
         .then(() => {
           ElMessage.success("删除成功");

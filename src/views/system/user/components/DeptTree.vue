@@ -21,7 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import DeptAPI from "@/api/system/dept-api";
+import DeptAPI from "@/api/dept-api";
+
 const props = defineProps({
   modelValue: {
     type: [String, Number],
@@ -64,7 +65,7 @@ function handleNodeClick(data: { [key: string]: any }) {
 
 onBeforeMount(() => {
   DeptAPI.getOptions().then((data) => {
-    deptList.value = data;
+    deptList.value = data.data;
   });
 });
 </script>

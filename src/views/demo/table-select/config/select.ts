@@ -1,4 +1,4 @@
-import UserAPI from "@/api/system/user-api";
+import UserAPI from "@/api/user-api";
 import type { ISelectConfig } from "@/components/TableSelect/index.vue";
 
 const selectConfig: ISelectConfig = {
@@ -90,7 +90,8 @@ const selectConfig: ISelectConfig = {
       }
       delete params.createAt;
     }
-    return UserAPI.getPage(params);
+    const response = UserAPI.getPage(params);
+    return response.data;
   },
   tableColumns: [
     { type: "selection", width: 50, align: "center" },

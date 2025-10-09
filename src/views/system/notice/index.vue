@@ -265,8 +265,8 @@ import NoticeAPI, {
   NoticeForm,
   NoticePageQuery,
   NoticeDetailVO,
-} from "@/api/system/notice-api";
-import UserAPI from "@/api/system/user-api";
+} from "@/api/notice-api";
+import UserAPI from "@/api/user-api";
 
 const queryFormRef = ref();
 const dataFormRef = ref();
@@ -326,7 +326,9 @@ function handleQuery() {
   loading.value = true;
   queryParams.pageNum = 1;
   NoticeAPI.getPage(queryParams)
-    .then((data) => {
+    .then((res) => {
+      const data = res.data;
+
       pageData.value = data.list;
       total.value = data.total;
     })
@@ -356,7 +358,9 @@ function handleOpenDialog(id?: string) {
   dialog.visible = true;
   if (id) {
     dialog.title = "修改公告";
-    NoticeAPI.getFormData(id).then((data) => {
+    NoticeAPI.getFormData(id).then((res) => {
+      const data = res.data;
+
       Object.assign(formData, data);
     });
   } else {

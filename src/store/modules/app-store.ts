@@ -17,6 +17,7 @@ export const useAppStore = defineStore("app", () => {
   const language = useStorage(STORAGE_KEYS.LANGUAGE, defaultSettings.language);
   // 侧边栏状态
   const sidebarStatus = useStorage(STORAGE_KEYS.SIDEBAR_STATUS, SidebarStatus.CLOSED);
+
   const sidebar = reactive({
     opened: sidebarStatus.value === SidebarStatus.OPENED,
     withoutAnimation: false,
@@ -67,6 +68,7 @@ export const useAppStore = defineStore("app", () => {
   function changeSize(val: string) {
     size.value = val;
   }
+
   /**
    * 切换语言
    *
@@ -75,12 +77,14 @@ export const useAppStore = defineStore("app", () => {
   function changeLanguage(val: string) {
     language.value = val;
   }
+
   /**
    * 混合模式顶部切换
    */
   function activeTopMenu(val: string) {
     activeTopMenuPath.value = val;
   }
+
   return {
     device,
     sidebar,

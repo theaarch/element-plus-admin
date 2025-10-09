@@ -65,6 +65,7 @@ export const useTagsViewStore = defineStore("tagsView", () => {
       resolve([...cachedViews.value]);
     });
   }
+
   function delOtherVisitedViews(view: TagView) {
     return new Promise((resolve) => {
       visitedViews.value = visitedViews.value.filter((v) => {
@@ -222,6 +223,7 @@ export const useTagsViewStore = defineStore("tagsView", () => {
       keepAlive: route.meta?.keepAlive,
       query: route.query,
     };
+
     delView(tags).then((res: any) => {
       if (isActive(tags)) {
         toLastView(res.visitedViews, tags);
@@ -235,6 +237,7 @@ export const useTagsViewStore = defineStore("tagsView", () => {
 
   function toLastView(visitedViews: TagView[], view?: TagView) {
     const latestView = visitedViews.slice(-1)[0];
+
     if (latestView && latestView.fullPath) {
       router.push(latestView.fullPath);
     } else {

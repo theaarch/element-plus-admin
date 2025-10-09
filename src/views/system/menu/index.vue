@@ -343,7 +343,7 @@
 import { useAppStore } from "@/store/modules/app-store";
 import { DeviceEnum } from "@/enums/settings/device-enum";
 
-import MenuAPI, { MenuQuery, MenuForm, MenuVO } from "@/api/system/menu-api";
+import MenuAPI, { MenuQuery, MenuForm, MenuVO } from "@/api/menu-api";
 import { MenuTypeEnum } from "@/enums/system/menu-enum";
 
 defineOptions({
@@ -400,7 +400,9 @@ const selectedMenuId = ref<string | undefined>();
 function handleQuery() {
   loading.value = true;
   MenuAPI.getList(queryParams)
-    .then((data) => {
+    .then((res) => {
+      const data = res.data;
+
       menuTableData.value = data;
     })
     .finally(() => {
@@ -427,14 +429,18 @@ function handleRowClick(row: MenuVO) {
  */
 function handleOpenDialog(parentId?: string, menuId?: string) {
   MenuAPI.getOptions(true)
-    .then((data) => {
+    .then((res) => {
+      const data = res.data;
+
       menuOptions.value = [{ value: "0", label: "顶级菜单", children: data }];
     })
     .then(() => {
       dialog.visible = true;
       if (menuId) {
         dialog.title = "编辑菜单";
-        MenuAPI.getFormData(menuId).then((data) => {
+        MenuAPI.getFormData(menuId).then((res) => {
+          const data = res.data;
+
           initialMenuFormData.value = { ...data };
           formData.value = data;
         });

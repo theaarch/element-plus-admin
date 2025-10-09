@@ -115,7 +115,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
-import NoticeAPI, { NoticePageVO, NoticePageQuery, NoticeDetailVO } from "@/api/system/notice-api";
+import NoticeAPI, { NoticePageVO, NoticePageQuery, NoticeDetailVO } from "@/api/notice-api";
 
 const queryFormRef = ref();
 const pageData = ref<NoticePageVO[]>([]);
@@ -135,7 +135,9 @@ const noticeDetail = ref<NoticeDetailVO | null>(null);
 function handleQuery() {
   loading.value = true;
   NoticeAPI.getMyNoticePage(queryParams)
-    .then((data) => {
+    .then((res) => {
+      const data = res.data;
+
       pageData.value = data.list;
       total.value = data.total;
     })
@@ -153,7 +155,9 @@ function handleResetQuery() {
 
 // 阅读通知公告
 function handleReadNotice(id: string) {
-  NoticeAPI.getDetail(id).then((data) => {
+  NoticeAPI.getDetail(id).then((res) => {
+    const data = res.data;
+
     noticeDialogVisible.value = true;
     noticeDetail.value = data;
   });

@@ -1,5 +1,5 @@
 import { store } from "@/store";
-import DictAPI, { type DictItemOption } from "@/api/system/dict-api";
+import DictAPI, { type DictItemOption } from "@/api/dict-api";
 import { STORAGE_KEYS } from "@/constants";
 
 export const useDictStore = defineStore("dict", () => {
@@ -24,13 +24,16 @@ export const useDictStore = defineStore("dict", () => {
    */
   const loadDictItems = async (dictCode: string) => {
     if (dictCache.value[dictCode]) return;
+
     // 防止重复请求
     if (!requestQueue[dictCode]) {
       requestQueue[dictCode] = DictAPI.getDictItems(dictCode).then((data) => {
-        cacheDictItems(dictCode, data);
+        cacheDictItems(dictCode, data.data);
+
         Reflect.deleteProperty(requestQueue, dictCode);
       });
     }
+
     await requestQueue[dictCode];
   };
 

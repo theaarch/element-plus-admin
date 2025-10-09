@@ -173,10 +173,13 @@ const loginRules = computed(() => {
 
 // 获取验证码
 const codeLoading = ref(false);
+
 function getCaptcha() {
   codeLoading.value = true;
   AuthAPI.getCaptcha()
-    .then((data) => {
+    .then((res) => {
+      const data = res.data;
+
       loginFormData.value.captchaKey = data.captchaKey;
       captchaBase64.value = data.captchaBase64;
     })
@@ -218,6 +221,7 @@ function checkCapsLock(event: KeyboardEvent) {
 }
 
 const emit = defineEmits(["update:modelValue"]);
+
 function toOtherForm(type: "register" | "resetPwd") {
   emit("update:modelValue", type);
 }

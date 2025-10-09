@@ -155,7 +155,7 @@
 
 <script setup lang="ts">
 import type { TagProps } from "element-plus";
-import DictAPI, { DictItemPageQuery, DictItemPageVO, DictItemForm } from "@/api/system/dict-api";
+import DictAPI, { DictItemPageQuery, DictItemPageVO, DictItemForm } from "@/api/dict-api";
 
 const route = useRoute();
 
@@ -199,8 +199,8 @@ function fetchData() {
   loading.value = true;
   DictAPI.getDictItemPage(dictCode.value, queryParams)
     .then((data) => {
-      tableData.value = data.list;
-      total.value = data.total;
+      tableData.value = data.data.list;
+      total.value = data.data.total;
     })
     .finally(() => {
       loading.value = false;
@@ -232,7 +232,7 @@ function handleOpenDialog(row?: DictItemPageVO) {
 
   if (row?.id) {
     DictAPI.getDictItemFormData(dictCode.value, row.id).then((data) => {
-      Object.assign(formData, data);
+      Object.assign(formData, data.data);
     });
   }
 }

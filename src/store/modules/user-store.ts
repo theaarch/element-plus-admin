@@ -1,7 +1,7 @@
 import { store } from "@/store";
 
 import AuthAPI, { type LoginFormData } from "@/api/auth-api";
-import UserAPI, { type UserInfo } from "@/api/system/user-api";
+import UserAPI, { type UserInfo } from "@/api/user-api";
 
 import { AuthStorage } from "@/utils/auth";
 import { usePermissionStoreHook } from "@/store/modules/permission-store";
@@ -24,8 +24,10 @@ export const useUserStore = defineStore("user", () => {
   function login(LoginFormData: LoginFormData) {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.login(LoginFormData)
-        .then((data) => {
+        .then((res) => {
+          const data = res.data;
           const { accessToken, refreshToken } = data;
+
           // 保存记住我状态和token
           rememberMe.value = LoginFormData.rememberMe;
           AuthStorage.setTokens(accessToken, refreshToken, rememberMe.value);
@@ -45,11 +47,14 @@ export const useUserStore = defineStore("user", () => {
   function getUserInfo() {
     return new Promise<UserInfo>((resolve, reject) => {
       UserAPI.getInfo()
-        .then((data) => {
+        .then((res) => {
+          const data = res.data;
+
           if (!data) {
             reject("Verification failed, please Login again.");
             return;
           }
+
           Object.assign(userInfo.value, { ...data });
           resolve(data);
         })
@@ -122,7 +127,9 @@ export const useUserStore = defineStore("user", () => {
 
     return new Promise<void>((resolve, reject) => {
       AuthAPI.refreshToken(refreshToken)
-        .then((data) => {
+        .then((res) => {
+          const data = res.data;
+
           const { accessToken, refreshToken: newRefreshToken } = data;
           // 更新令牌，保持当前记住我状态
           AuthStorage.setTokens(accessToken, newRefreshToken, AuthStorage.getRememberMe());

@@ -137,7 +137,7 @@ defineOptions({
   inherititems: false,
 });
 
-import DictAPI, { DictPageQuery, DictPageVO, DictForm } from "@/api/system/dict-api";
+import DictAPI, { DictPageQuery, DictPageVO, DictForm } from "@/api/dict-api";
 
 import router from "@/router";
 
@@ -174,7 +174,9 @@ const computedRules = computed(() => {
 function fetchData() {
   loading.value = true;
   DictAPI.getPage(queryParams)
-    .then((data) => {
+    .then((res) => {
+      const data = res.data;
+
       tableData.value = data.list;
       total.value = data.total;
     })
@@ -215,7 +217,9 @@ function handleAddClick() {
 function handleEditClick(id: string) {
   dialog.visible = true;
   dialog.title = "修改字典";
-  DictAPI.getFormData(id).then((data) => {
+  DictAPI.getFormData(id).then((res) => {
+    const data = res.data;
+
     Object.assign(formData, data);
   });
 }

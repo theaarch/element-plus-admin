@@ -1,11 +1,11 @@
-import request from "@/utils/request";
+import http from "@/utils/http";
 
 const LOG_BASE_URL = "/api/v1/logs";
 
 const LogAPI = {
   /** 获取日志分页列表 */
   getPage(queryParams: LogPageQuery) {
-    return request<any, PageResult<LogPageVO[]>>({
+    return http<any, PageResult<LogPageVO[]>>({
       url: `${LOG_BASE_URL}/page`,
       method: "get",
       params: queryParams,
@@ -13,7 +13,7 @@ const LogAPI = {
   },
   /** 获取访问趋势 */
   getVisitTrend(queryParams: VisitTrendQuery) {
-    return request<any, VisitTrendVO>({
+    return http<any, VisitTrendVO>({
       url: `${LOG_BASE_URL}/visit-trend`,
       method: "get",
       params: queryParams,
@@ -21,7 +21,7 @@ const LogAPI = {
   },
   /** 获取访问统计 */
   getVisitStats() {
-    return request<any, VisitStatsVO>({ url: `${LOG_BASE_URL}/visit-stats`, method: "get" });
+    return http<any, VisitStatsVO>({ url: `${LOG_BASE_URL}/visit-stats`, method: "get" });
   },
 };
 

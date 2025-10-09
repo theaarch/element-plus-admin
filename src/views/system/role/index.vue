@@ -215,8 +215,8 @@
 import { useAppStore } from "@/store/modules/app-store";
 import { DeviceEnum } from "@/enums/settings/device-enum";
 
-import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/system/role-api";
-import MenuAPI from "@/api/system/menu-api";
+import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/role-api";
+import MenuAPI from "@/api/menu-api";
 
 defineOptions({
   name: "Role",
@@ -269,6 +269,7 @@ interface CheckedRole {
   id?: string;
   name?: string;
 }
+
 const checkedRole = ref<CheckedRole>({});
 const assignPermDialogVisible = ref(false);
 
@@ -280,8 +281,11 @@ const parentChildLinked = ref(true);
 // 获取数据
 function fetchData() {
   loading.value = true;
+
   RoleAPI.getPage(queryParams)
-    .then((data) => {
+    .then((res) => {
+      const data = res.data;
+
       roleList.value = data.list;
       total.value = data.total;
     })
@@ -293,6 +297,7 @@ function fetchData() {
 // 查询（重置页码后获取数据）
 function handleQuery() {
   queryParams.pageNum = 1;
+
   fetchData();
 }
 
@@ -300,6 +305,7 @@ function handleQuery() {
 function handleResetQuery() {
   queryFormRef.value.resetFields();
   queryParams.pageNum = 1;
+
   fetchData();
 }
 
@@ -311,9 +317,12 @@ function handleSelectionChange(selection: any) {
 // 打开角色弹窗
 function handleOpenDialog(roleId?: string) {
   dialog.visible = true;
+
   if (roleId) {
     dialog.title = "修改角色";
-    RoleAPI.getFormData(roleId).then((data) => {
+    RoleAPI.getFormData(roleId).then((res) => {
+      const data = res.data;
+
       Object.assign(formData, data);
     });
   } else {
@@ -399,11 +408,14 @@ async function handleOpenAssignPermDialog(row: RolePageVO) {
     checkedRole.value.name = row.name;
 
     // 获取所有的菜单
-    menuPermOptions.value = await MenuAPI.getOptions();
+    const response = await MenuAPI.getOptions();
+    menuPermOptions.value = response.data;
 
     // 回显角色已拥有的菜单
     RoleAPI.getRoleMenuIds(roleId)
-      .then((data) => {
+      .then((res) => {
+        const data = res.data;
+
         const checkedMenuIds = data;
         checkedMenuIds.forEach((menuId) => permTreeRef.value!.setChecked(menuId, true, false));
       })
@@ -416,6 +428,7 @@ async function handleOpenAssignPermDialog(row: RolePageVO) {
 // 分配菜单权限提交
 function handleAssignPermSubmit() {
   const roleId = checkedRole.value.id;
+
   if (roleId) {
     const checkedMenuIds: number[] = permTreeRef
       .value!.getCheckedNodes(false, true)

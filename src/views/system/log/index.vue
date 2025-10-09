@@ -68,7 +68,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
-import LogAPI, { LogPageVO, LogPageQuery } from "@/api/system/log-api";
+import LogAPI, { LogPageVO, LogPageQuery } from "@/api/log-api";
 
 const queryFormRef = ref();
 
@@ -89,7 +89,9 @@ const pageData = ref<LogPageVO[]>();
 function fetchData() {
   loading.value = true;
   LogAPI.getPage(queryParams)
-    .then((data) => {
+    .then((res) => {
+      const data = res.data;
+
       pageData.value = data.list;
       total.value = data.total;
     })

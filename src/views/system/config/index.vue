@@ -141,7 +141,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
-import ConfigAPI, { ConfigPageVO, ConfigForm, ConfigPageQuery } from "@/api/system/config-api";
+import ConfigAPI, { ConfigPageVO, ConfigForm, ConfigPageQuery } from "@/api/config-api";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useDebounceFn } from "@vueuse/core";
 
@@ -185,8 +185,8 @@ function fetchData() {
   loading.value = true;
   ConfigAPI.getPage(queryParams)
     .then((data) => {
-      pageData.value = data.list;
-      total.value = data.total;
+      pageData.value = data.data.list;
+      total.value = data.data.total;
     })
     .finally(() => {
       loading.value = false;
@@ -217,7 +217,7 @@ function handleOpenDialog(id?: string) {
   if (id) {
     dialog.title = "修改系统配置";
     ConfigAPI.getFormData(id).then((data) => {
-      Object.assign(formData, data);
+      Object.assign(formData, data.data);
     });
   } else {
     dialog.title = "新增系统配置";

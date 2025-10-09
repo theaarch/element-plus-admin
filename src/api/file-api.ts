@@ -1,9 +1,9 @@
-import request from "@/utils/request";
+import http from "@/utils/http";
 
 const FileAPI = {
   /** 上传文件 （传入 FormData，上传进度回调） */
   upload(formData: FormData, onProgress?: (percent: number) => void) {
-    return request<any, FileInfo>({
+    return http<any, FileInfo>({
       url: "/api/v1/files",
       method: "post",
       data: formData,
@@ -21,7 +21,7 @@ const FileAPI = {
   uploadFile(file: File) {
     const formData = new FormData();
     formData.append("file", file);
-    return request<any, FileInfo>({
+    return http<any, FileInfo>({
       url: "/api/v1/files",
       method: "post",
       data: formData,
@@ -31,7 +31,7 @@ const FileAPI = {
 
   /** 删除文件 */
   delete(filePath?: string) {
-    return request({
+    return http({
       url: "/api/v1/files",
       method: "delete",
       params: { filePath },
@@ -40,7 +40,7 @@ const FileAPI = {
 
   /** 下载文件 */
   download(url: string, fileName?: string) {
-    return request({
+    return http({
       url,
       method: "get",
       responseType: "blob",

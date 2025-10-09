@@ -230,7 +230,7 @@ import UserAPI, {
   MobileUpdateForm,
   EmailUpdateForm,
   UserProfileForm,
-} from "@/api/system/user-api";
+} from "@/api/user-api";
 
 import FileAPI from "@/api/file-api";
 import { useUserStoreHook } from "@/store";
@@ -454,10 +454,10 @@ const handleFileChange = async (event: Event) => {
       const data = await FileAPI.uploadFile(file);
       // 更新用户信息
       await UserAPI.updateProfile({
-        avatar: data.url,
+        avatar: data.data.url,
       });
       // 更新用户头像
-      userStore.userInfo.avatar = data.url;
+      userStore.userInfo.avatar = data.data.url;
     } catch (error) {
       console.error("头像上传失败：" + error);
       ElMessage.error("头像上传失败");
@@ -468,7 +468,7 @@ const handleFileChange = async (event: Event) => {
 /** 加载用户信息 */
 const loadUserProfile = async () => {
   const data = await UserAPI.getProfile();
-  userProfile.value = data;
+  userProfile.value = data.data;
 };
 
 onMounted(async () => {

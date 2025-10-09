@@ -1,4 +1,5 @@
 import http from "@/utils/http";
+import { AxiosResponse } from "axios";
 
 const USER_BASE_URL = "/api/v1/users";
 
@@ -8,8 +9,8 @@ const UserAPI = {
    *
    * @returns 登录用户昵称、头像信息，包括角色和权限
    */
-  getInfo() {
-    return http.get<any, UserInfo>(`${USER_BASE_URL}/me`);
+  getInfo(): Promise<ApiResponse<UserInfo>> {
+    return http.get(`${USER_BASE_URL}/me`);
   },
 
   /**
@@ -17,8 +18,8 @@ const UserAPI = {
    *
    * @param queryParams 查询参数
    */
-  getPage(queryParams: UserPageQuery) {
-    return http.get<any, PageResult<UserPageVO[]>>(`${USER_BASE_URL}/page`, {
+  getPage(queryParams: UserPageQuery): Promise<ApiResponse<PageResult<UserPageVO>>> {
+    return http.get(`${USER_BASE_URL}/page`, {
       params: queryParams,
     });
   },
@@ -29,8 +30,8 @@ const UserAPI = {
    * @param userId 用户ID
    * @returns 用户表单详情
    */
-  getFormData(userId: string) {
-    return http.get<any, UserForm>(`${USER_BASE_URL}/${userId}/form`);
+  getFormData(userId: string): Promise<ApiResponse<UserForm>> {
+    return http.get(`${USER_BASE_URL}/${userId}/form`);
   },
 
   /**
@@ -38,7 +39,7 @@ const UserAPI = {
    *
    * @param data 用户表单数据
    */
-  create(data: UserForm) {
+  create(data: UserForm): Promise<ApiResponse<void>> {
     return http.post(`${USER_BASE_URL}`, data);
   },
 
@@ -48,7 +49,7 @@ const UserAPI = {
    * @param id 用户ID
    * @param data 用户表单数据
    */
-  update(id: string, data: UserForm) {
+  update(id: string, data: UserForm): Promise<ApiResponse<void>> {
     return http.put(`${USER_BASE_URL}/${id}`, data);
   },
 
@@ -58,7 +59,7 @@ const UserAPI = {
    * @param id 用户ID
    * @param password 新密码
    */
-  resetPassword(id: string, password: string) {
+  resetPassword(id: string, password: string): Promise<ApiResponse<void>> {
     return http.put(
       `${USER_BASE_URL}/${id}/password/reset`,
       {},
@@ -73,12 +74,12 @@ const UserAPI = {
    *
    * @param ids 用户ID字符串，多个以英文逗号(,)分割
    */
-  deleteByIds(ids: string) {
+  deleteByIds(ids: string): Promise<ApiResponse<void>> {
     return http.delete(`${USER_BASE_URL}/${ids}`);
   },
 
   /** 下载用户导入模板 */
-  downloadTemplate() {
+  downloadTemplate(): Promise<AxiosResponse<Blob>> {
     return http.get(`${USER_BASE_URL}/template`, {
       responseType: "blob",
     });
@@ -89,7 +90,7 @@ const UserAPI = {
    *
    * @param queryParams 查询参数
    */
-  export(queryParams: UserPageQuery) {
+  export(queryParams: UserPageQuery): Promise<AxiosResponse<Blob>> {
     return http.get(`${USER_BASE_URL}/export`, {
       params: queryParams,
       responseType: "blob",
@@ -102,11 +103,12 @@ const UserAPI = {
    * @param deptId 部门ID
    * @param file 导入文件
    */
-  import(deptId: string, file: File) {
+  import(deptId: string, file: File): Promise<ApiResponse<ExcelResult>> {
     const formData = new FormData();
+
     formData.append("file", file);
 
-    return http.post<any, ExcelResult>(`${USER_BASE_URL}/import`, formData, {
+    return http.post(`${USER_BASE_URL}/import`, formData, {
       params: { deptId },
       headers: {
         "Content-Type": "multipart/form-data",
@@ -115,22 +117,22 @@ const UserAPI = {
   },
 
   /** 获取个人中心用户信息 */
-  getProfile() {
-    return http.get<any, UserProfileVO>(`${USER_BASE_URL}/profile`);
+  getProfile(): Promise<ApiResponse<UserProfileVO>> {
+    return http.get(`${USER_BASE_URL}/profile`);
   },
 
   /** 修改个人中心用户信息 */
-  updateProfile(data: UserProfileForm) {
+  updateProfile(data: UserProfileForm): Promise<ApiResponse<void>> {
     return http.put(`${USER_BASE_URL}/profile`, data);
   },
 
   /** 修改个人中心用户密码 */
-  changePassword(data: PasswordChangeForm) {
+  changePassword(data: PasswordChangeForm): Promise<ApiResponse<void>> {
     return http.put(`${USER_BASE_URL}/password`, data);
   },
 
   /** 发送短信验证码（绑定或更换手机号）*/
-  sendMobileCode(mobile: string) {
+  sendMobileCode(mobile: string): Promise<ApiResponse<void>> {
     return http.post(
       `${USER_BASE_URL}/mobile/code`,
       {},
@@ -141,12 +143,12 @@ const UserAPI = {
   },
 
   /** 绑定或更换手机号 */
-  bindOrChangeMobile(data: MobileUpdateForm) {
+  bindOrChangeMobile(data: MobileUpdateForm): Promise<ApiResponse<void>> {
     return http.put(`${USER_BASE_URL}/mobile`, data);
   },
 
   /** 发送邮箱验证码（绑定或更换邮箱）*/
-  sendEmailCode(email: string) {
+  sendEmailCode(email: string): Promise<ApiResponse<void>> {
     return http.post(
       `${USER_BASE_URL}/email/code`,
       {},
@@ -157,15 +159,15 @@ const UserAPI = {
   },
 
   /** 绑定或更换邮箱 */
-  bindOrChangeEmail(data: EmailUpdateForm) {
+  bindOrChangeEmail(data: EmailUpdateForm): Promise<ApiResponse<void>> {
     return http.put(`${USER_BASE_URL}/email`, data);
   },
 
   /**
    *  获取用户下拉列表
    */
-  getOptions() {
-    return http.get<any, OptionType[]>(`${USER_BASE_URL}/options`, {});
+  getOptions(): Promise<ApiResponse<OptionType[]>> {
+    return http.get(`${USER_BASE_URL}/options`, {});
   },
 };
 

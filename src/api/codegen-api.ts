@@ -4,31 +4,34 @@ const GENERATOR_BASE_URL = "/api/v1/codegen";
 
 const GeneratorAPI = {
   /** 获取数据表分页列表 */
-  getTablePage(params: TablePageQuery) {
-    return http.get<any, PageResult<TablePageVO[]>>(`${GENERATOR_BASE_URL}/table/page`, {
+  getTablePage(params: TablePageQuery): Promise<ApiResponse<PageResult<TablePageVO>>> {
+    return http.get(`${GENERATOR_BASE_URL}/table/page`, {
       params,
     });
   },
 
   /** 获取代码生成配置 */
-  getGenConfig(tableName: string) {
-    return http.get<any, GenConfigForm>(`${GENERATOR_BASE_URL}/${tableName}/config`);
+  getGenConfig(tableName: string): Promise<ApiResponse<GenConfigForm>> {
+    return http.get(`${GENERATOR_BASE_URL}/${tableName}/config`);
   },
 
   /** 获取代码生成配置 */
-  saveGenConfig(tableName: string, data: GenConfigForm) {
+  saveGenConfig(tableName: string, data: GenConfigForm): Promise<ApiResponse<null>> {
     return http.post(`${GENERATOR_BASE_URL}/${tableName}/config`, data);
   },
 
   /** 获取代码生成预览数据 */
-  getPreviewData(tableName: string, pageType?: "classic" | "curd") {
-    return http.get<any, GeneratorPreviewVO[]>(`${GENERATOR_BASE_URL}/${tableName}/preview`, {
+  getPreviewData(
+    tableName: string,
+    pageType?: "classic" | "curd"
+  ): Promise<ApiResponse<GeneratorPreviewVO[]>> {
+    return http.get(`${GENERATOR_BASE_URL}/${tableName}/preview`, {
       params: pageType ? { pageType } : undefined,
     });
   },
 
   /** 重置代码生成配置 */
-  resetGenConfig(tableName: string) {
+  resetGenConfig(tableName: string): Promise<ApiResponse<null>> {
     return http.delete(`${GENERATOR_BASE_URL}/${tableName}/config`);
   },
 
@@ -49,9 +52,11 @@ const GeneratorAPI = {
         const blob = new Blob([response.data], { type: "application/zip" });
         const a = document.createElement("a");
         const url = window.URL.createObjectURL(blob);
+
         a.href = url;
         a.download = fileName;
         a.click();
+
         window.URL.revokeObjectURL(url);
       });
   },

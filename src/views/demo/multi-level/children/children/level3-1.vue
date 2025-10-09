@@ -9,6 +9,7 @@
     </div>
   </div>
 </template>
+
 <script lang="ts" setup>
 import ToDetail from "./detail";
 import MultiLevel1 from "../../level1.vue";

@@ -522,10 +522,8 @@ import "codemirror/mode/javascript/javascript.js";
 import Codemirror from "codemirror-editor-vue3";
 import type { CmComponentRef } from "codemirror-editor-vue3";
 import type { EditorConfiguration } from "codemirror";
-
 import { FormTypeEnum } from "@/enums/codegen/form-enum";
 import { QueryTypeEnum } from "@/enums/codegen/query-enum";
-
 import GeneratorAPI, {
   TablePageVO,
   GenConfigForm,
@@ -533,7 +531,6 @@ import GeneratorAPI, {
   FieldConfig,
 } from "@/api/codegen-api";
 import { ElLoading } from "element-plus";
-
 import DictAPI from "@/api/dict-api";
 import MenuAPI from "@/api/menu-api";
 
@@ -868,8 +865,11 @@ async function handleOpenDialog(tableName: string) {
 
     dictOptions.value = data;
     loading.value = true;
+
     GeneratorAPI.getGenConfig(tableName)
-      .then((data) => {
+      .then((res) => {
+        const data = res.data;
+
         dialog.title = `${tableName} 代码生成`;
         genConfigFormData.value = data;
 
@@ -1364,6 +1364,7 @@ watch(backendDirName, (v) => (backendDirPath.value = v));
 
 async function confirmWrite() {
   await writeGeneratedCode();
+
   writeDialog.visible = false;
 }
 

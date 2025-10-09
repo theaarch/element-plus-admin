@@ -37,6 +37,7 @@ export function removeClass(ele: HTMLElement, cls: string) {
  */
 export function isExternal(path: string) {
   const isExternal = /^(https?:|http?:|mailto:|tel:)/.test(path);
+
   return isExternal;
 }
 
@@ -54,5 +55,6 @@ export function formatGrowthRate(growthRate: number) {
   const formattedRate = Math.abs(growthRate * 100)
     .toFixed(2)
     .replace(/\.?0+$/, "");
+
   return formattedRate + "%";
 }

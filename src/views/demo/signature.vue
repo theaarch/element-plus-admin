@@ -20,6 +20,7 @@
     <img v-if="imgUrl" :src="imgUrl" alt="签名" />
   </div>
 </template>
+
 <script setup lang="ts">
 import FileAPI from "@/api/file-api";
 
@@ -79,6 +80,7 @@ const onEventEnd = () => {
 onMounted(() => {
   ctx = canvas.value.getContext("2d") as CanvasRenderingContext2D;
 });
+
 const handleToFile = async () => {
   if (isCanvasBlank(canvas.value)) {
     ElMessage({
@@ -90,13 +92,15 @@ const handleToFile = async () => {
   const file = dataURLtoFile(canvas.value.toDataURL(), "签名.png");
 
   if (!file) return;
-  const data = await FileAPI.uploadFile(file);
+  const res = await FileAPI.uploadFile(file);
   handleClearSign();
-  imgUrl.value = data.url;
+  imgUrl.value = res.data.url;
 };
+
 const handleClearSign = () => {
   ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
 };
+
 const isCanvasBlank = (canvas: HTMLCanvasElement) => {
   const blank = document.createElement("canvas"); //系统获取一个空canvas对象
   blank.width = canvas.width;
@@ -121,6 +125,7 @@ const handleSaveImg = () => {
   const event = new MouseEvent("click");
   el.dispatchEvent(event);
 };
+
 // 转为file格式，可传递给后端
 const dataURLtoFile = (dataurl: string, filename: string) => {
   const arr: string[] = dataurl.split(",");
@@ -137,6 +142,7 @@ const dataURLtoFile = (dataurl: string, filename: string) => {
     return new File([u8arr], filename, { type: mime[1] });
   }
 };
+
 // canvas 画图
 function paint(
   startX: number,
@@ -155,6 +161,7 @@ function paint(
   ctx.stroke();
 }
 </script>
+
 <style scoped lang="scss">
 .canvas-dom {
   width: 100%;

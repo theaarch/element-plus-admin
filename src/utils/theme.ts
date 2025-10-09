@@ -3,6 +3,7 @@ import { ThemeMode } from "@/enums";
 // 辅助函数：将十六进制颜色转换为 RGB
 function hexToRgb(hex: string): [number, number, number] {
   const bigint = parseInt(hex.slice(1), 16);
+
   return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
 }
 
@@ -31,6 +32,7 @@ function rgbToHex(r: number, g: number, b: number): string {
 export function getDarkColor(color: string, level: number): string {
   const rgb = hexToRgb(color);
   for (let i = 0; i < 3; i++) rgb[i] = Math.round(20.5 * level + rgb[i] * (1 - level));
+
   return rgbToHex(rgb[0], rgb[1], rgb[2]);
 }
 
@@ -43,6 +45,7 @@ export function getDarkColor(color: string, level: number): string {
 export const getLightColor = (color: string, level: number): string => {
   const rgb = hexToRgb(color);
   for (let i = 0; i < 3; i++) rgb[i] = Math.round(255 * level + rgb[i] * (1 - level));
+
   return rgbToHex(rgb[0], rgb[1], rgb[2]);
 };
 

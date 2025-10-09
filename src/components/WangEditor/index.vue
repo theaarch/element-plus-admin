@@ -45,6 +45,7 @@ defineProps({
     default: "500px",
   },
 });
+
 // 双向绑定
 const modelValue = defineModel("modelValue", {
   type: String,
@@ -66,7 +67,7 @@ const editorConfig = ref<Partial<IEditorConfig>>({
         // 上传图片
         FileAPI.uploadFile(file).then((res) => {
           // 插入图片
-          insertFn(res.url, res.name, res.url);
+          insertFn(res.data.url, res.data.name, res.data.url);
         });
       },
     } as any,

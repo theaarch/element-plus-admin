@@ -31,7 +31,9 @@
             </div>
             <div class="user-role">{{ userProfile.roleNames }}</div>
           </div>
+
           <el-divider />
+
           <div class="user-stats">
             <div class="stat-item">
               <div class="stat-value">0</div>
@@ -231,10 +233,8 @@ import UserAPI, {
   EmailUpdateForm,
   UserProfileForm,
 } from "@/api/user-api";
-
 import FileAPI from "@/api/file-api";
 import { useUserStoreHook } from "@/store";
-
 import { Camera } from "@element-plus/icons-vue";
 
 const userStore = useUserStoreHook();
@@ -253,6 +253,7 @@ const dialog = reactive({
   title: "",
   type: "" as DialogType, // 修改账号资料,修改密码、绑定手机、绑定邮箱
 });
+
 const userProfileFormRef = ref();
 const passwordChangeFormRef = ref();
 const mobileBindingFormRef = ref();
@@ -337,12 +338,14 @@ function handleSendMobileCode() {
     ElMessage.error("请输入手机号");
     return;
   }
+
   // 验证手机号格式
   const reg = /^1[3-9]\d{9}$/;
   if (!reg.test(mobileUpdateForm.mobile)) {
     ElMessage.error("手机号格式不正确");
     return;
   }
+
   // 发送短信验证码
   UserAPI.sendMobileCode(mobileUpdateForm.mobile).then(() => {
     ElMessage.success("验证码发送成功");
@@ -367,6 +370,7 @@ function handleSendEmailCode() {
     ElMessage.error("请输入邮箱");
     return;
   }
+
   // 验证邮箱格式
   const reg = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
   if (!reg.test(emailUpdateForm.email)) {
@@ -377,6 +381,7 @@ function handleSendEmailCode() {
   // 发送邮箱验证码
   UserAPI.sendEmailCode(emailUpdateForm.email).then(() => {
     ElMessage.success("验证码发送成功");
+
     // 倒计时 60s 重新发送
     emailCountdown.value = 60;
     emailTimer.value = setInterval(() => {
@@ -428,6 +433,7 @@ const handleSubmit = async () => {
  */
 const handleCancel = () => {
   dialog.visible = false;
+
   if (dialog.type === DialogType.ACCOUNT) {
     userProfileFormRef.value?.resetFields();
   } else if (dialog.type === DialogType.PASSWORD) {
@@ -448,16 +454,20 @@ const triggerFileUpload = () => {
 const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files ? target.files[0] : null;
+
   if (file) {
     // 调用文件上传API
     try {
-      const data = await FileAPI.uploadFile(file);
+      const response = await FileAPI.uploadFile(file);
+      const data = response.data;
+
       // 更新用户信息
       await UserAPI.updateProfile({
-        avatar: data.data.url,
+        avatar: data.url,
       });
+
       // 更新用户头像
-      userStore.userInfo.avatar = data.data.url;
+      userStore.userInfo.avatar = data.url;
     } catch (error) {
       console.error("头像上传失败：" + error);
       ElMessage.error("头像上传失败");
@@ -467,17 +477,21 @@ const handleFileChange = async (event: Event) => {
 
 /** 加载用户信息 */
 const loadUserProfile = async () => {
-  const data = await UserAPI.getProfile();
-  userProfile.value = data.data;
+  const response = await UserAPI.getProfile();
+  const data = response.data;
+
+  userProfile.value = data;
 };
 
 onMounted(async () => {
   if (mobileTimer.value) {
     clearInterval(mobileTimer.value);
   }
+
   if (emailTimer.value) {
     clearInterval(emailTimer.value);
   }
+
   await loadUserProfile();
 });
 </script>

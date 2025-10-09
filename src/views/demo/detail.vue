@@ -5,6 +5,7 @@
     <el-input v-model="value" placeholder="缓存测试" />
   </div>
 </template>
+
 <script lang="ts" setup>
 defineOptions({
   name: "DemoDetail",

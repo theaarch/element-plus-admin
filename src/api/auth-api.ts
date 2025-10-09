@@ -4,14 +4,15 @@ const AUTH_BASE_URL = "/api/v1/auth";
 
 const AuthAPI = {
   /** 登录接口*/
-  login(data: LoginFormData) {
+  login(data: LoginFormData): Promise<ApiResponse<LoginResult>> {
     const formData = new FormData();
+
     formData.append("username", data.username);
     formData.append("password", data.password);
     formData.append("captchaKey", data.captchaKey);
     formData.append("captchaCode", data.captchaCode);
 
-    return http.post<any, LoginResult>(`${AUTH_BASE_URL}/login`, formData, {
+    return http.post(`${AUTH_BASE_URL}/login`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -19,8 +20,8 @@ const AuthAPI = {
   },
 
   /** 刷新 token 接口*/
-  refreshToken(refreshToken: string) {
-    return http.post<any, LoginResult>(
+  refreshToken(refreshToken: string): Promise<ApiResponse<LoginResult>> {
+    return http.post(
       `${AUTH_BASE_URL}/refresh-token`,
       {},
       {
@@ -33,13 +34,13 @@ const AuthAPI = {
   },
 
   /** 退出登录接口 */
-  logout() {
+  logout(): Promise<ApiResponse<null>> {
     return http.delete(`${AUTH_BASE_URL}/logout`);
   },
 
   /** 获取验证码接口*/
-  getCaptcha() {
-    return http.get<any, CaptchaInfo>(`${AUTH_BASE_URL}/captcha`);
+  getCaptcha(): Promise<ApiResponse<CaptchaInfo>> {
+    return http.get(`${AUTH_BASE_URL}/captcha`);
   },
 };
 

@@ -32,15 +32,14 @@
 
 <script lang="ts" setup>
 import MenuItemContent from "./components/MenuItemContent.vue";
-
-defineOptions({
-  name: "MixTopMenu",
-});
-
 import { LocationQueryRaw, RouteRecordRaw } from "vue-router";
 import { usePermissionStore, useAppStore, useSettingsStore } from "@/store";
 import variables from "@/styles/variables.module.scss";
 import { SidebarColor } from "@/enums/settings/theme-enum";
+
+defineOptions({
+  name: "MixTopMenu",
+});
 
 const router = useRouter();
 const appStore = useAppStore();

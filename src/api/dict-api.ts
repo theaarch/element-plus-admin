@@ -4,66 +4,69 @@ const DICT_BASE_URL = "/api/v1/dicts";
 
 const DictAPI = {
   /** 字典分页列表 */
-  getPage(queryParams: DictPageQuery) {
-    return http.get<any, PageResult<DictPageVO[]>>(`${DICT_BASE_URL}/page`, {
+  getPage(queryParams: DictPageQuery): Promise<ApiResponse<PageResult<DictPageVO>>> {
+    return http.get(`${DICT_BASE_URL}/page`, {
       params: queryParams,
     });
   },
 
   /** 字典列表 */
-  getList() {
-    return http.get<any, OptionType[]>(`${DICT_BASE_URL}`);
+  getList(): Promise<ApiResponse<OptionType[]>> {
+    return http.get(`${DICT_BASE_URL}`);
   },
 
   /** 字典表单数据 */
-  getFormData(id: string) {
-    return http.get<any, DictForm>(`${DICT_BASE_URL}/${id}/form`);
+  getFormData(id: string): Promise<ApiResponse<DictForm>> {
+    return http.get(`${DICT_BASE_URL}/${id}/form`);
   },
 
   /** 新增字典 */
-  create(data: DictForm) {
+  create(data: DictForm): Promise<ApiResponse<void>> {
     return http.post(`${DICT_BASE_URL}`, data);
   },
 
   /** 修改字典 */
-  update(id: string, data: DictForm) {
+  update(id: string, data: DictForm): Promise<ApiResponse<void>> {
     return http.put(`${DICT_BASE_URL}/${id}`, data);
   },
 
   /** 删除字典 */
-  deleteByIds(ids: string) {
+  deleteByIds(ids: string): Promise<ApiResponse<void>> {
     return http.delete(`${DICT_BASE_URL}/${ids}`);
   },
 
   /** 获取字典项分页列表 */
-  getDictItemPage(dictCode: string, queryParams: DictItemPageQuery) {
-    return http.get<any, PageResult<DictItemPageVO[]>>(`${DICT_BASE_URL}/${dictCode}/items/page`, {
+  getDictItemPage(
+    dictCode: string,
+    queryParams: DictItemPageQuery
+  ): Promise<ApiResponse<PageResult<DictItemPageVO>>> {
+    return http.get(`${DICT_BASE_URL}/${dictCode}/items/page`, {
       params: queryParams,
     });
   },
 
   /** 获取字典项列表 */
-  getDictItems(dictCode: string) {
-    return http.get<any, DictItemOption[]>(`${DICT_BASE_URL}/${dictCode}/items`);
+  getDictItems(dictCode: string): Promise<ApiResponse<DictItemOption[]>> {
+    return http.get(`${DICT_BASE_URL}/${dictCode}/items`);
   },
 
   /** 新增字典项 */
-  createDictItem(dictCode: string, data: DictItemForm) {
+  createDictItem(dictCode: string, data: DictItemForm): Promise<ApiResponse<void>> {
     return http.post(`${DICT_BASE_URL}/${dictCode}/items`, data);
   },
 
   /** 获取字典项表单数据 */
-  getDictItemFormData(dictCode: string, id: string) {
-    return http.get<any, DictItemForm>(`${DICT_BASE_URL}/${dictCode}/items/${id}/form`);
+  getDictItemFormData(dictCode: string, id: string): Promise<ApiResponse<DictItemForm>> {
+    return http.get(`${DICT_BASE_URL}/${dictCode}/items/${id}/form`);
   },
 
   /** 修改字典项 */
-  updateDictItem(dictCode: string, id: string, data: DictItemForm) {
+  updateDictItem(dictCode: string, id: string, data: DictItemForm): Promise<ApiResponse<void>> {
     return http.put(`${DICT_BASE_URL}/${dictCode}/items/${id}`, data);
   },
 
   /** 删除字典项 */
-  deleteDictItems(dictCode: string, ids: string) {
+  deleteDictItems(dictCode: string, ids: string): Promise<ApiResponse<void>> {
     return http.delete(`${DICT_BASE_URL}/${dictCode}/items/${ids}`);
   },
 };

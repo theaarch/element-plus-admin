@@ -45,7 +45,7 @@ http.interceptors.request.use(
  * 响应拦截器 - 统一处理响应和错误
  */
 http.interceptors.response.use(
-  (response) => {
+  (response: AxiosResponse) => {
     // 如果响应是二进制流，则直接返回（用于文件下载、Excel 导出等）
     if (response.config.responseType === "blob") {
       return response;
@@ -55,7 +55,6 @@ http.interceptors.response.use(
 
     // 请求成功
     if (code === ApiCodeEnum.SUCCESS) {
-      // return data;
       return response.data;
     }
 

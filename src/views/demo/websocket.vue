@@ -8,6 +8,7 @@
     >
       示例源码 请点击>>>>
     </el-link>
+
     <el-row :gutter="10">
       <el-col :span="12">
         <el-card>
@@ -101,17 +102,22 @@ import { useStomp } from "@/composables/websocket/useStomp";
 import { useUserStoreHook } from "@/store/modules/user-store";
 
 const userStore = useUserStoreHook();
+
 // 用于手动调整 WebSocket 地址
 const socketEndpoint = ref(import.meta.env.VITE_APP_WS_ENDPOINT);
+
 // 同步连接状态
 interface MessageType {
   type?: string;
   sender?: string;
   content: string;
 }
+
 const messages = ref<MessageType[]>([]);
+
 // 广播消息内容
 const topicMessage = ref("亲爱的朋友们，系统已恢复最新状态。");
+
 // 点对点消息内容（默认示例）
 const queneMessage = ref("Hi, " + userStore.userInfo.username + " 这里是点对点消息示例！");
 const receiver = ref("root");

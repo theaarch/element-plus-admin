@@ -101,8 +101,8 @@ const stateArr = ref<OptionType[]>([
 const initOptions = async () => {
   try {
     const [dept, roles] = await Promise.all([DeptAPI.getOptions(), RoleAPI.getOptions()]);
-    deptArr.value = dept;
-    roleArr.value = roles;
+    deptArr.value = dept.data;
+    roleArr.value = roles.data;
   } catch (error) {
     console.error("初始化选项失败:", error);
   }
@@ -183,8 +183,10 @@ const contentConfig: IContentConfig<UserPageQuery> = reactive({
       list: res.list,
     };
   },
-  indexAction(params: any) {
-    return UserAPI.getPage(params);
+  async indexAction(params: any) {
+    const response = await UserAPI.getPage(params);
+
+    return response.data;
   },
   deleteAction: UserAPI.deleteByIds,
   importAction(file: File) {
@@ -198,8 +200,8 @@ const contentConfig: IContentConfig<UserPageQuery> = reactive({
   },
   async exportsAction(params: any) {
     const res = await UserAPI.getPage(params);
-    console.log("exportsAction", res.list);
-    return res.list;
+    console.log("exportsAction", res.data.list);
+    return res.data.list;
   },
   pk: "id",
   toolbar: [
@@ -240,7 +242,9 @@ const contentConfig: IContentConfig<UserPageQuery> = reactive({
       filterMultiple: true,
       filterJoin: ",",
       async initFn(colItem: any) {
-        const roleOptions = await RoleAPI.getOptions();
+        const response = await RoleAPI.getOptions();
+        const roleOptions = response.data;
+
         colItem.filters = roleOptions.map((item) => {
           return { text: item.label, value: item.value };
         });
@@ -554,11 +558,13 @@ function handleToolbarClick(name: string) {
 const handleOperateClick = (data: IObject) => {
   if (data.name === "detail") {
     editModalConfig.drawer = { ...editModalConfig.drawer, title: "查看" };
+
     handleViewClick(data.row, async () => {
       return await UserAPI.getFormData(data.row.id);
     });
   } else if (data.name === "edit") {
     editModalConfig.drawer = { ...editModalConfig.drawer, title: "修改" };
+
     handleEditClick(data.row, async () => {
       return await UserAPI.getFormData(data.row.id);
     });

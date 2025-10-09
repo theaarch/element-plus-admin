@@ -4,22 +4,22 @@ const LOG_BASE_URL = "/api/v1/logs";
 
 const LogAPI = {
   /** 获取日志分页列表 */
-  getPage(queryParams: LogPageQuery) {
-    return http.get<any, PageResult<LogPageVO[]>>(`${LOG_BASE_URL}/page`, {
+  getPage(queryParams: LogPageQuery): Promise<ApiResponse<PageResult<LogPageVO>>> {
+    return http.get(`${LOG_BASE_URL}/page`, {
       params: queryParams,
     });
   },
 
   /** 获取访问趋势 */
-  getVisitTrend(queryParams: VisitTrendQuery) {
-    return http.get<any, VisitTrendVO>(`${LOG_BASE_URL}/visit-trend`, {
+  getVisitTrend(queryParams: VisitTrendQuery): Promise<ApiResponse<VisitTrendVO>> {
+    return http.get(`${LOG_BASE_URL}/visit-trend`, {
       params: queryParams,
     });
   },
 
   /** 获取访问统计 */
-  getVisitStats() {
-    return http.get<any, VisitStatsVO>(`${LOG_BASE_URL}/visit-stats`);
+  getVisitStats(): Promise<ApiResponse<VisitStatsVO>> {
+    return http.get(`${LOG_BASE_URL}/visit-stats`);
   },
 };
 

@@ -109,6 +109,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import type { FormInstance } from "element-plus";
 import AuthAPI, { type LoginFormData } from "@/api/auth-api";

@@ -13,6 +13,7 @@
         </CommonWrapper>
       </el-tooltip>
     </div>
+
     <!-- 登录页主体 -->
     <div flex-1 flex-center>
       <div
@@ -35,11 +36,12 @@
           </transition>
         </div>
       </div>
+
       <!-- 登录页底部版权 -->
-      <el-text size="small" class="py-2.5! fixed bottom-0 text-center">
+      <!-- <el-text size="small" class="py-2.5! fixed bottom-0 text-center">
         Copyright © 2021 - 2025 youlai.tech All Rights Reserved.
         <a href="http://beian.miit.gov.cn/" target="_blank">皖ICP备20006496号-2</a>
-      </el-text>
+      </el-text> -->
     </div>
   </div>
 </template>
@@ -83,9 +85,9 @@ const formComponents = {
   width: 100%;
   height: 100%;
   content: "";
-  background: url("@/assets/images/login-bg.svg");
-  background-position: center center;
-  background-size: cover;
+  // background: url("@/assets/images/login-bg.svg");
+  // background-position: center center;
+  // background-size: cover;
 }
 
 .action-bar {

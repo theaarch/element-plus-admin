@@ -261,10 +261,10 @@ defineOptions({
 });
 
 import NoticeAPI, {
-  NoticePageVO,
+  NoticeDetailVO,
   NoticeForm,
   NoticePageQuery,
-  NoticeDetailVO,
+  NoticePageVO,
 } from "@/api/notice-api";
 import UserAPI from "@/api/user-api";
 
@@ -351,8 +351,8 @@ function handleSelectionChange(selection: any) {
 
 // 打开通知公告弹窗
 function handleOpenDialog(id?: string) {
-  UserAPI.getOptions().then((data) => {
-    userOptions.value = data;
+  UserAPI.getOptions().then((res) => {
+    userOptions.value = res.data;
   });
 
   dialog.visible = true;

@@ -4,44 +4,44 @@ const ROLE_BASE_URL = "/api/v1/roles";
 
 const RoleAPI = {
   /** 获取角色分页数据 */
-  getPage(queryParams?: RolePageQuery) {
-    return http.get<any, PageResult<RolePageVO[]>>(`${ROLE_BASE_URL}/page`, {
+  getPage(queryParams?: RolePageQuery): Promise<ApiResponse<PageResult<RolePageVO>>> {
+    return http.get(`${ROLE_BASE_URL}/page`, {
       params: queryParams,
     });
   },
 
   /** 获取角色下拉数据源 */
-  getOptions() {
-    return http.get<any, OptionType[]>(`${ROLE_BASE_URL}/options`);
+  getOptions(): Promise<ApiResponse<OptionType[]>> {
+    return http.get(`${ROLE_BASE_URL}/options`);
   },
 
   /** 获取角色的菜单ID集合 */
-  getRoleMenuIds(roleId: string) {
-    return http.get<any, string[]>(`${ROLE_BASE_URL}/${roleId}/menuIds`);
+  getRoleMenuIds(roleId: string): Promise<ApiResponse<string[]>> {
+    return http.get(`${ROLE_BASE_URL}/${roleId}/menuIds`);
   },
 
   /** 分配菜单权限 */
-  updateRoleMenus(roleId: string, data: number[]) {
+  updateRoleMenus(roleId: string, data: number[]): Promise<ApiResponse<void>> {
     return http.put(`${ROLE_BASE_URL}/${roleId}/menus`, data);
   },
 
   /** 获取角色表单数据 */
-  getFormData(id: string) {
-    return http.get<any, RoleForm>(`${ROLE_BASE_URL}/${id}/form`);
+  getFormData(id: string): Promise<ApiResponse<RoleForm>> {
+    return http.get(`${ROLE_BASE_URL}/${id}/form`);
   },
 
   /** 新增角色 */
-  create(data: RoleForm) {
+  create(data: RoleForm): Promise<ApiResponse<void>> {
     return http.post(`${ROLE_BASE_URL}`, data);
   },
 
   /** 更新角色 */
-  update(id: string, data: RoleForm) {
+  update(id: string, data: RoleForm): Promise<ApiResponse<void>> {
     return http.put(`${ROLE_BASE_URL}/${id}`, data);
   },
 
   /** 批量删除角色，多个以英文逗号(,)分割 */
-  deleteByIds(ids: string) {
+  deleteByIds(ids: string): Promise<ApiResponse<void>> {
     return http.delete(`${ROLE_BASE_URL}/${ids}`, {});
   },
 };

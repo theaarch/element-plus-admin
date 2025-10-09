@@ -4,39 +4,39 @@ const MENU_BASE_URL = "/api/v1/menus";
 
 const MenuAPI = {
   /** 获取当前用户的路由列表 */
-  getRoutes() {
-    return http.get<any, RouteVO[]>(`${MENU_BASE_URL}/routes`);
+  getRoutes(): Promise<ApiResponse<RouteVO[]>> {
+    return http.get(`${MENU_BASE_URL}/routes`);
   },
 
   /** 获取菜单树形列表 */
-  getList(queryParams: MenuQuery) {
-    return http.get<any, MenuVO[]>(`${MENU_BASE_URL}`, { params: queryParams });
+  getList(queryParams: MenuQuery): Promise<ApiResponse<MenuVO[]>> {
+    return http.get(`${MENU_BASE_URL}`, { params: queryParams });
   },
 
   /** 获取菜单下拉数据源 */
-  getOptions(onlyParent?: boolean) {
-    return http.get<any, OptionType[]>(`${MENU_BASE_URL}/options`, {
+  getOptions(onlyParent?: boolean): Promise<ApiResponse<OptionType[]>> {
+    return http.get(`${MENU_BASE_URL}/options`, {
       params: { onlyParent },
     });
   },
 
   /** 获取菜单表单数据 */
-  getFormData(id: string) {
-    return http.get<any, MenuForm>(`${MENU_BASE_URL}/${id}/form`);
+  getFormData(id: string): Promise<ApiResponse<MenuForm>> {
+    return http.get(`${MENU_BASE_URL}/${id}/form`);
   },
 
   /** 新增菜单 */
-  create(data: MenuForm) {
+  create(data: MenuForm): Promise<ApiResponse<void>> {
     return http.post(`${MENU_BASE_URL}`, data);
   },
 
   /** 修改菜单 */
-  update(id: string, data: MenuForm) {
+  update(id: string, data: MenuForm): Promise<ApiResponse<void>> {
     return http.put(`${MENU_BASE_URL}/${id}`, data);
   },
 
   /** 删除菜单 */
-  deleteById(id: string) {
+  deleteById(id: string): Promise<ApiResponse<void>> {
     return http.delete(`${MENU_BASE_URL}/${id}`);
   },
 };

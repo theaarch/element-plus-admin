@@ -4,55 +4,55 @@ const NOTICE_BASE_URL = "/api/v1/notices";
 
 const NoticeAPI = {
   /** 获取通知公告分页数据 */
-  getPage(queryParams?: NoticePageQuery) {
-    return http.get<any, PageResult<NoticePageVO[]>>(`${NOTICE_BASE_URL}/page`, {
+  getPage(queryParams?: NoticePageQuery): Promise<ApiResponse<PageResult<NoticePageVO>>> {
+    return http.get(`${NOTICE_BASE_URL}/page`, {
       params: queryParams,
     });
   },
 
   /** 获取通知公告表单数据 */
-  getFormData(id: string) {
-    return http.get<any, NoticeForm>(`${NOTICE_BASE_URL}/${id}/form`);
+  getFormData(id: string): Promise<ApiResponse<NoticeForm>> {
+    return http.get(`${NOTICE_BASE_URL}/${id}/form`);
   },
 
   /** 添加通知公告 */
-  create(data: NoticeForm) {
+  create(data: NoticeForm): Promise<ApiResponse<void>> {
     return http.post(`${NOTICE_BASE_URL}`, data);
   },
 
   /** 更新通知公告 */
-  update(id: string, data: NoticeForm) {
+  update(id: string, data: NoticeForm): Promise<ApiResponse<void>> {
     return http.put(`${NOTICE_BASE_URL}/${id}`, data);
   },
 
   /** 批量删除通知公告，多个以英文逗号(,)分割 */
-  deleteByIds(ids: string) {
+  deleteByIds(ids: string): Promise<ApiResponse<void>> {
     return http.delete(`${NOTICE_BASE_URL}/${ids}`);
   },
 
   /** 发布通知 */
-  publish(id: string) {
+  publish(id: string): Promise<ApiResponse<void>> {
     return http.put(`${NOTICE_BASE_URL}/${id}/publish`);
   },
 
   /** 撤回通知 */
-  revoke(id: string) {
+  revoke(id: string): Promise<ApiResponse<void>> {
     return http.put(`${NOTICE_BASE_URL}/${id}/revoke`);
   },
 
   /** 查看通知 */
-  getDetail(id: string) {
-    return http.get<any, NoticeDetailVO>(`${NOTICE_BASE_URL}/${id}/detail`);
+  getDetail(id: string): Promise<ApiResponse<NoticeDetailVO>> {
+    return http.get(`${NOTICE_BASE_URL}/${id}/detail`);
   },
 
   /** 全部已读 */
-  readAll() {
+  readAll(): Promise<ApiResponse<void>> {
     return http.put(`${NOTICE_BASE_URL}/read-all`);
   },
 
   /** 获取我的通知分页列表 */
-  getMyNoticePage(queryParams?: NoticePageQuery) {
-    return http.get<any, PageResult<NoticePageVO[]>>(`${NOTICE_BASE_URL}/my-page`, {
+  getMyNoticePage(queryParams?: NoticePageQuery): Promise<ApiResponse<PageResult<NoticePageVO>>> {
+    return http.get(`${NOTICE_BASE_URL}/my-page`, {
       params: queryParams,
     });
   },

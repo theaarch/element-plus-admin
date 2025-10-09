@@ -208,8 +208,8 @@ const refreshDictComponent = async () => {
 // 加载男性字典表单数据
 const loadMaleDict = async () => {
   // 获取男性字典项表单数据 - 使用接口 /dicts/gender/items/1/form
-  const data = await DictAPI.getDictItemFormData(DICT_CODE, MALE_ITEM_ID);
-  dictForm.value = data;
+  const res = await DictAPI.getDictItemFormData(DICT_CODE, MALE_ITEM_ID);
+  dictForm.value = res.data;
 };
 
 // 保存字典项

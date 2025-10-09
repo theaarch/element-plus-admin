@@ -1,5 +1,5 @@
 // Generic response with wrapper
-export interface ApiResponse<T> {
+export interface ApiWrappedResponse<T> {
   data: T;
 }
 

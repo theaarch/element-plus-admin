@@ -50,16 +50,14 @@
 
 <script setup lang="ts">
 import MenuItemContent from "./MenuItemContent.vue";
+import path from "path-browserify";
+import { RouteRecordRaw } from "vue-router";
+import { isExternal } from "@/utils";
 
 defineOptions({
   name: "MenuItem",
   inheritAttrs: false,
 });
-
-import path from "path-browserify";
-import { RouteRecordRaw } from "vue-router";
-
-import { isExternal } from "@/utils";
 
 const props = defineProps({
   /**

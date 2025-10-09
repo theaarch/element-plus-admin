@@ -141,11 +141,11 @@
 
 <script setup lang="ts">
 import { DocumentCopy, RefreshLeft, Check } from "@element-plus/icons-vue";
-
-const { t } = useI18n();
 import { LayoutMode, SidebarColor, ThemeMode } from "@/enums";
 import { useSettingsStore } from "@/store";
 import { themeColorPresets } from "@/settings";
+
+const { t } = useI18n();
 
 // 按钮图标
 const copyIcon = markRaw(DocumentCopy);

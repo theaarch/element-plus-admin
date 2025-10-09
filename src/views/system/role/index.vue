@@ -335,6 +335,7 @@ function handleSubmit() {
   roleFormRef.value.validate((valid: any) => {
     if (valid) {
       loading.value = true;
+
       const roleId = formData.id;
       if (roleId) {
         RoleAPI.update(roleId, formData)

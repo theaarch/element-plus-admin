@@ -92,6 +92,7 @@ const options = [
   { label: "用户", value: "user" },
   { label: "访客", value: "guest" },
 ];
+
 onMounted(() => {
   setTimeout(() => {
     gridOptions!.formConfig!.items!.forEach((item) => {
@@ -112,7 +113,9 @@ interface RowMeta {
   status: boolean;
   createTime: string;
 }
+
 const xGrid = ref<VxeGridInstance<RowMeta>>();
+
 const gridOptions = reactive<VxeGridProps<RowMeta>>({
   // 自动监听父元素的变化去重新计算表格
   autoResize: true,
@@ -471,6 +474,7 @@ const gridOptions = reactive<VxeGridProps<RowMeta>>({
     },
   },
 });
+
 const gridEvents: VxeGridListeners<RowMeta> = {
   // 只对 form-config 配置时有效，表单重置时会触发该事件
   formReset() {

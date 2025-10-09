@@ -1,1 +1,0 @@
-import{c as e,c1 as s,B as t}from"./index.DxBlw8vg.js";const r=["class","style"],l=/^on[A-Z]/,n=(n={})=>{const{excludeListeners:c=!1,excludeKeys:a}=n,o=e(()=>((null==a?void 0:a.value)||[]).concat(r)),u=t();return e(u?()=>{var e;return s(Object.entries(null==(e=u.proxy)?void 0:e.$attrs).filter(([e])=>!(o.value.includes(e)||c&&l.test(e))))}:()=>({}))};export{n as u};

@@ -1,3 +1,8 @@
+/**
+ * @deprecated This module is deprecated.
+ * Use `@/utils/http` instead.
+ */
+
 import axios, { type InternalAxiosRequestConfig, type AxiosResponse } from "axios";
 import qs from "qs";
 import { useUserStoreHook } from "@/store/modules/user-store";

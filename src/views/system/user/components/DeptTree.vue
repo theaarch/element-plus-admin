@@ -66,9 +66,7 @@ function handleNodeClick(data: { [key: string]: any }) {
 
 onBeforeMount(() => {
   DeptAPI.getOptions().then((res) => {
-    const data = res.data;
-
-    deptList.value = data;
+    deptList.value = res.data;
   });
 });
 </script>

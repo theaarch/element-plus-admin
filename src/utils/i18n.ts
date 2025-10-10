@@ -1,4 +1,4 @@
-// translate router.meta.title, be used in breadcrumb sidebar tagsview
+// translate router.meta.title, be used in breadcrumb sidebar AppTabs
 import i18n from "@/lang/index";
 
 export function translateRouteTitle(title: any) {
@@ -6,8 +6,7 @@ export function translateRouteTitle(title: any) {
   const hasKey = i18n.global.te("route." + title);
 
   if (hasKey) {
-    const translatedTitle = i18n.global.t("route." + title);
-    return translatedTitle;
+    return i18n.global.t("route." + title);
   }
 
   return title;

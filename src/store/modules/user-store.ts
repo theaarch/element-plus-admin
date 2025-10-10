@@ -1,8 +1,6 @@
 import { store } from "@/store";
-
 import AuthAPI, { type LoginFormData } from "@/api/auth-api";
 import UserAPI, { type UserInfo } from "@/api/user-api";
-
 import { AuthStorage } from "@/utils/auth";
 import { usePermissionStoreHook } from "@/store/modules/permission-store";
 import { useDictStoreHook } from "@/store/modules/dict-store";
@@ -15,12 +13,7 @@ export const useUserStore = defineStore("user", () => {
   // 记住我状态
   const rememberMe = ref(AuthStorage.getRememberMe());
 
-  /**
-   * 登录
-   *
-   * @param {LoginFormData}
-   * @returns
-   */
+  /** 登录 */
   function login(LoginFormData: LoginFormData) {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.login(LoginFormData)

@@ -9,6 +9,7 @@
     "dark": "Dark",
     "light": "Light",
     "username": "Username",
+    "email": "Email",
     "password": "Password",
     "login": "Login",
     "captchaCode": "Verify Code",
@@ -18,6 +19,9 @@
     "message": {
       "username": {
         "required": "Please enter Username"
+      },
+      "email": {
+        "required": "Please enter Email"
       },
       "password": {
         "required": "Please enter Password",

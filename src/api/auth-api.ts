@@ -3,20 +3,8 @@ import http from "@/utils/http";
 const AUTH_BASE_URL = "/api/v1/auth";
 
 const AuthAPI = {
-  /** 登录接口 */
   login(data: LoginFormData): Promise<ApiResponse<LoginResult>> {
-    const formData = new FormData();
-
-    formData.append("username", data.username);
-    formData.append("password", data.password);
-    formData.append("captchaKey", data.captchaKey);
-    formData.append("captchaCode", data.captchaCode);
-
-    return http.post(`${AUTH_BASE_URL}/login`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    return http.post(`/api/auth/token`, data);
   },
 
   /** 刷新 token 接口 */
@@ -49,13 +37,14 @@ export default AuthAPI;
 /** 登录表单数据 */
 export interface LoginFormData {
   // 用户名
-  username: string;
+  // username: string;
+  email: string;
   // 密码
   password: string;
   // 验证码缓存key
-  captchaKey: string;
+  // captchaKey: string;
   // 验证码
-  captchaCode: string;
+  // captchaCode: string;
   // 记住我
   rememberMe: boolean;
 }
@@ -70,6 +59,9 @@ export interface LoginResult {
   tokenType: string;
   // 过期时间(秒)
   expiresIn: number;
+
+  token: string;
+  token_type?: string;
 }
 
 /** 验证码信息 */

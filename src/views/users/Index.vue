@@ -1,167 +1,140 @@
-<!-- 用户管理 -->
 <template>
   <div class="app-container">
-    <el-row :gutter="20">
-      <!-- 部门树 -->
-      <el-col :lg="4" :xs="24" class="mb-[12px]">
-        <DeptTree v-model="queryParams.deptId" @node-click="handleQuery" />
-      </el-col>
-
-      <!-- 用户列表 -->
-      <el-col :lg="20" :xs="24">
-        <!-- 搜索区域 -->
-        <div class="search-container">
-          <el-form ref="queryFormRef" :model="queryParams" :inline="true" label-width="auto">
-            <el-form-item label="关键字" prop="keywords">
-              <el-input
-                v-model="queryParams.keywords"
-                placeholder="用户名/昵称/手机号"
-                clearable
-                @keyup.enter="handleQuery"
-              />
-            </el-form-item>
-
-            <el-form-item label="状态" prop="status">
-              <el-select
-                v-model="queryParams.status"
-                placeholder="全部"
-                clearable
-                style="width: 100px"
-              >
-                <el-option label="正常" :value="1" />
-                <el-option label="禁用" :value="0" />
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="创建时间">
-              <el-date-picker
-                v-model="queryParams.createTime"
-                :editable="false"
-                type="daterange"
-                range-separator="~"
-                start-placeholder="开始时间"
-                end-placeholder="截止时间"
-                value-format="YYYY-MM-DD"
-              />
-            </el-form-item>
-
-            <el-form-item class="search-buttons">
-              <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
-              <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-
-        <el-card shadow="hover" class="data-table">
-          <div class="data-table__toolbar">
-            <div class="data-table__toolbar--actions">
-              <el-button
-                v-hasPerm="['sys:user:add']"
-                type="success"
-                icon="plus"
-                @click="handleOpenDialog()"
-              >
-                新增
-              </el-button>
-              <el-button
-                v-hasPerm="'sys:user:delete'"
-                type="danger"
-                icon="delete"
-                :disabled="selectIds.length === 0"
-                @click="handleDelete()"
-              >
-                删除
-              </el-button>
-            </div>
-            <div class="data-table__toolbar--tools">
-              <el-button
-                v-hasPerm="'sys:user:import'"
-                icon="upload"
-                @click="handleOpenImportDialog"
-              >
-                导入
-              </el-button>
-
-              <el-button v-hasPerm="'sys:user:export'" icon="download" @click="handleExport">
-                导出
-              </el-button>
-            </div>
-          </div>
-
-          <el-table
-            v-loading="loading"
-            :data="pageData"
-            border
-            stripe
-            highlight-current-row
-            class="data-table__content"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection" width="50" align="center" />
-            <el-table-column label="用户名" prop="username" />
-            <el-table-column label="昵称" width="150" align="center" prop="nickname" />
-            <el-table-column label="性别" width="100" align="center">
-              <template #default="scope">
-                <DictLabel v-model="scope.row.gender" code="gender" />
-              </template>
-            </el-table-column>
-            <el-table-column label="部门" width="120" align="center" prop="deptName" />
-            <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
-            <el-table-column label="邮箱" align="center" prop="email" width="160" />
-            <el-table-column label="状态" align="center" prop="status" width="80">
-              <template #default="scope">
-                <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
-                  {{ scope.row.status == 1 ? "正常" : "禁用" }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="创建时间" align="center" prop="createTime" width="150" />
-            <el-table-column label="操作" fixed="right" width="220">
-              <template #default="scope">
-                <el-button
-                  v-hasPerm="'sys:user:reset-password'"
-                  type="primary"
-                  icon="RefreshLeft"
-                  size="small"
-                  link
-                  @click="handleResetPassword(scope.row)"
-                >
-                  重置密码
-                </el-button>
-                <el-button
-                  v-hasPerm="'sys:user:edit'"
-                  type="primary"
-                  icon="edit"
-                  link
-                  size="small"
-                  @click="handleOpenDialog(scope.row.id)"
-                >
-                  编辑
-                </el-button>
-                <el-button
-                  v-hasPerm="'sys:user:delete'"
-                  type="danger"
-                  icon="delete"
-                  link
-                  size="small"
-                  @click="handleDelete(scope.row.id)"
-                >
-                  删除
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-
-          <pagination
-            v-if="total > 0"
-            v-model:total="total"
-            v-model:page="queryParams.pageNum"
-            v-model:limit="queryParams.pageSize"
-            @pagination="fetchData"
+    <div class="search-container">
+      <el-form ref="queryFormRef" :model="queryParams" :inline="true" label-width="auto">
+        <el-form-item label="关键字" prop="keywords">
+          <el-input
+            v-model="queryParams.keywords"
+            placeholder="Email/昵称/手机号"
+            clearable
+            @keyup.enter="handleQuery"
           />
-        </el-card>
-      </el-col>
-    </el-row>
+        </el-form-item>
+
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
+            <el-option label="正常" :value="1" />
+            <el-option label="禁用" :value="0" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="创建时间">
+          <el-date-picker
+            v-model="queryParams.created_at"
+            :editable="false"
+            type="daterange"
+            range-separator="~"
+            start-placeholder="开始时间"
+            end-placeholder="截止时间"
+            value-format="YYYY-MM-DD"
+          />
+        </el-form-item>
+
+        <el-form-item class="search-buttons">
+          <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
+          <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <el-card shadow="hover" class="data-table">
+      <div class="data-table__toolbar">
+        <div class="data-table__toolbar--actions">
+          <el-button
+            v-hasPerm="['sys:user:add']"
+            type="success"
+            icon="plus"
+            @click="handleOpenDialog()"
+          >
+            新增
+          </el-button>
+          <el-button
+            v-hasPerm="'sys:user:delete'"
+            type="danger"
+            icon="delete"
+            :disabled="selectIds.length === 0"
+            @click="handleDelete()"
+          >
+            删除
+          </el-button>
+        </div>
+        <div class="data-table__toolbar--tools">
+          <el-button v-hasPerm="'sys:user:import'" icon="upload" @click="handleOpenImportDialog">
+            导入
+          </el-button>
+
+          <el-button v-hasPerm="'sys:user:export'" icon="download" @click="handleExport">
+            导出
+          </el-button>
+        </div>
+      </div>
+
+      <el-table
+        v-loading="loading"
+        :data="pageData"
+        border
+        stripe
+        highlight-current-row
+        class="data-table__content"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="50" align="center" />
+        <el-table-column label="ID" prop="id" />
+        <el-table-column label="Email" prop="email" />
+        <el-table-column label="Name" align="center" prop="name" />
+        <el-table-column label="Roles"  align="center" prop="deptName" />
+        <el-table-column label="Status" align="center" prop="status" >
+          <template #default="scope">
+            <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
+              {{ scope.row.status == 1 ? "正常" : "禁用" }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="Created At" align="center" prop="created_at"  />
+        <el-table-column label="Actions" fixed="right" width="220">
+          <template #default="scope">
+            <el-button
+              v-hasPerm="'sys:user:reset-password'"
+              type="primary"
+              icon="RefreshLeft"
+              size="small"
+              link
+              @click="handleResetPassword(scope.row)"
+            >
+              重置密码
+            </el-button>
+            <el-button
+              v-hasPerm="'sys:user:edit'"
+              type="primary"
+              icon="edit"
+              link
+              size="small"
+              @click="handleOpenDialog(scope.row.id)"
+            >
+              编辑
+            </el-button>
+            <el-button
+              v-hasPerm="'sys:user:delete'"
+              type="danger"
+              icon="delete"
+              link
+              size="small"
+              @click="handleDelete(scope.row.id)"
+            >
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination
+        v-if="total > 0"
+        v-model:total="total"
+        v-model:page="queryParams.pageNum"
+        v-model:limit="queryParams.pageSize"
+        @pagination="fetchData"
+      />
+    </el-card>
 
     <!-- 用户表单 -->
     <el-drawer
@@ -172,16 +145,12 @@
       @close="handleCloseDialog"
     >
       <el-form ref="userFormRef" :model="formData" :rules="rules" label-width="80px">
-        <el-form-item label="用户名" prop="username">
-          <el-input
-            v-model="formData.username"
-            :readonly="!!formData.id"
-            placeholder="请输入用户名"
-          />
+        <el-form-item label="Email" prop="email">
+          <el-input v-model="formData.email" :readonly="!!formData.id" placeholder="请输入Email" />
         </el-form-item>
 
-        <el-form-item label="用户昵称" prop="nickname">
-          <el-input v-model="formData.nickname" placeholder="请输入用户昵称" />
+        <el-form-item label="用户昵称" prop="name">
+          <el-input v-model="formData.name" placeholder="请输入用户昵称" />
         </el-form-item>
 
         <el-form-item label="所属部门" prop="deptId">
@@ -280,6 +249,7 @@ const dialog = reactive({
   visible: false,
   title: "新增用户",
 });
+
 const drawerSize = computed(() => (appStore.device === DeviceEnum.DESKTOP ? "600px" : "90%"));
 
 const formData = reactive<UserForm>({
@@ -287,24 +257,24 @@ const formData = reactive<UserForm>({
 });
 
 const rules = reactive({
-  username: [{ required: true, message: "用户名不能为空", trigger: "blur" }],
-  nickname: [{ required: true, message: "用户昵称不能为空", trigger: "blur" }],
+  email: [{ required: true, message: "Email不能为空", trigger: "blur" }],
+  name: [{ required: true, message: "用户昵称不能为空", trigger: "blur" }],
   deptId: [{ required: true, message: "所属部门不能为空", trigger: "blur" }],
   roleIds: [{ required: true, message: "用户角色不能为空", trigger: "blur" }],
-  email: [
-    {
-      pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/,
-      message: "请输入正确的邮箱地址",
-      trigger: "blur",
-    },
-  ],
-  mobile: [
-    {
-      pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-      message: "请输入正确的手机号码",
-      trigger: "blur",
-    },
-  ],
+  // email: [
+  //   {
+  //     pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/,
+  //     message: "请输入正确的邮箱地址",
+  //     trigger: "blur",
+  //   },
+  // ],
+  // mobile: [
+  //   {
+  //     pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+  //     message: "请输入正确的手机号码",
+  //     trigger: "blur",
+  //   },
+  // ],
 });
 
 // 选中的用户ID
@@ -319,12 +289,12 @@ const importDialogVisible = ref(false);
 // 获取数据
 async function fetchData() {
   loading.value = true;
+
   try {
     const res = await UserAPI.getPage(queryParams);
-    const data = res.data;
 
-    pageData.value = data.list;
-    total.value = data.total;
+    pageData.value = res.data;
+    total.value = res.meta.total;
   } finally {
     loading.value = false;
   }
@@ -352,7 +322,7 @@ function handleSelectionChange(selection: any[]) {
 
 // 重置密码
 function handleResetPassword(row: UserPageVO) {
-  ElMessageBox.prompt("请输入用户【" + row.username + "】的新密码", "重置密码", {
+  ElMessageBox.prompt("请输入用户【" + row.email + "】的新密码", "重置密码", {
     confirmButtonText: "确定",
     cancelButtonText: "取消",
   }).then(

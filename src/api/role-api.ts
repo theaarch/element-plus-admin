@@ -1,48 +1,46 @@
 import http from "@/utils/http";
+import { Role, RoleFilters } from "@/interfaces/role";
+import { ApiWrappedResponse, PaginatedResponse } from "@/interfaces/response";
 
 const ROLE_BASE_URL = "/api/v1/roles";
 
 const RoleAPI = {
-  /** 获取角色分页数据 */
-  getPage(queryParams?: RolePageQuery): Promise<ApiResponse<PageResult<RolePageVO>>> {
-    return http.get(`${ROLE_BASE_URL}/page`, {
+  fetchRoles(queryParams?: RoleFilters): Promise<PaginatedResponse<Role>> {
+    return http.get(`/api/roles`, {
       params: queryParams,
     });
   },
 
-  /** 获取角色下拉数据源 */
+  getRole(id: number | string): Promise<ApiWrappedResponse<Role>> {
+    return http.get(`/api/roles/${id}`);
+  },
+
+  createRole(data: Partial<Role>): Promise<ApiWrappedResponse<Role>> {
+    return http.post(`/api/roles`, data);
+  },
+
+  updateRole(id: number, data: Partial<Role>): Promise<ApiWrappedResponse<Role>> {
+    return http.put(`/api/roles/${id}`, data);
+  },
+
+  deleteRole(id: number): Promise<void> {
+    return http.delete(`/api/roles/${id}`);
+  },
+
+  bulkDeleteRoles(ids: number[]): Promise<void> {
+    return http.delete("/api/roles", { data: { ids } });
+  },
+
   getOptions(): Promise<ApiResponse<OptionType[]>> {
     return http.get(`${ROLE_BASE_URL}/options`);
   },
 
-  /** 获取角色的菜单ID集合 */
   getRoleMenuIds(roleId: string): Promise<ApiResponse<string[]>> {
     return http.get(`${ROLE_BASE_URL}/${roleId}/menuIds`);
   },
 
-  /** 分配菜单权限 */
   updateRoleMenus(roleId: string, data: number[]): Promise<ApiResponse<void>> {
     return http.put(`${ROLE_BASE_URL}/${roleId}/menus`, data);
-  },
-
-  /** 获取角色表单数据 */
-  getFormData(id: string): Promise<ApiResponse<RoleForm>> {
-    return http.get(`${ROLE_BASE_URL}/${id}/form`);
-  },
-
-  /** 新增角色 */
-  create(data: RoleForm): Promise<ApiResponse<void>> {
-    return http.post(`${ROLE_BASE_URL}`, data);
-  },
-
-  /** 更新角色 */
-  update(id: string, data: RoleForm): Promise<ApiResponse<void>> {
-    return http.put(`${ROLE_BASE_URL}/${id}`, data);
-  },
-
-  /** 批量删除角色，多个以英文逗号(,)分割 */
-  deleteByIds(ids: string): Promise<ApiResponse<void>> {
-    return http.delete(`${ROLE_BASE_URL}/${ids}`, {});
   },
 };
 

@@ -9,8 +9,8 @@
       :validate-on-rule-change="false"
     >
       <!-- 用户名 -->
-      <el-form-item prop="username">
-        <el-input v-model.trim="loginFormData.username" :placeholder="t('login.username')">
+      <el-form-item prop="email">
+        <el-input v-model.trim="loginFormData.email" :placeholder="t('login.email')">
           <template #prefix>
             <el-icon><User /></el-icon>
           </template>
@@ -36,7 +36,7 @@
       </el-tooltip>
 
       <!-- 验证码 -->
-      <el-form-item prop="captchaCode">
+      <!-- <el-form-item prop="captchaCode">
         <div flex>
           <el-input
             v-model.trim="loginFormData.captchaCode"
@@ -61,7 +61,7 @@
             />
           </div>
         </div>
-      </el-form-item>
+      </el-form-item> -->
 
       <div class="flex-x-between w-full">
         <el-checkbox v-model="loginFormData.rememberMe">{{ t("login.rememberMe") }}</el-checkbox>
@@ -122,7 +122,7 @@ const { t } = useI18n();
 const userStore = useUserStore();
 const route = useRoute();
 
-onMounted(() => getCaptcha());
+// onMounted(() => getCaptcha());
 
 const loginFormRef = ref<FormInstance>();
 const loading = ref(false);
@@ -134,20 +134,20 @@ const captchaBase64 = ref();
 const rememberMe = AuthStorage.getRememberMe();
 
 const loginFormData = ref<LoginFormData>({
-  username: "admin",
-  password: "123456",
-  captchaKey: "",
-  captchaCode: "",
+  email: "demo@example.com",
+  password: "password",
+  // captchaKey: "",
+  // captchaCode: "",
   rememberMe,
 });
 
 const loginRules = computed(() => {
   return {
-    username: [
+    email: [
       {
         required: true,
         trigger: "blur",
-        message: t("login.message.username.required"),
+        message: t("login.message.email.required"),
       },
     ],
     password: [

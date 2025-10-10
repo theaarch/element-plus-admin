@@ -5,9 +5,6 @@ import { ApiCodeEnum } from "@/enums/api/code-enum";
 import { AuthStorage } from "@/utils/auth";
 import router from "@/router";
 
-/**
- * 创建 HTTP 请求实例
- */
 const http = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 50000,
@@ -19,55 +16,33 @@ const http = axios.create({
   paramsSerializer: (params) => qs.stringify(params),
 });
 
-/**
- * 请求拦截器 - 添加 Authorization 头
- */
 http.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const accessToken = AuthStorage.getAccessToken();
+    const token = AuthStorage.getAccessToken();
 
-    // 如果 Authorization 设置为 no-auth，则不携带 Token
-    if (config.headers.Authorization !== "no-auth" && accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    } else {
-      delete config.headers.Authorization;
+    if (token) {
+      config.headers = config.headers || {};
+      (config.headers as Record<string, any>).Authorization = `Bearer ${token}`;
     }
 
     return config;
   },
-  (error) => {
-    console.error("Request interceptor error:", error);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-/**
- * 响应拦截器 - 统一处理响应和错误
- */
 http.interceptors.response.use(
   (response: AxiosResponse) => {
-    // 如果响应是二进制流，则直接返回（用于文件下载、Excel 导出等）
     if (response.config.responseType === "blob") {
       return response;
     }
 
-    const { code, msg } = response.data;
-
-    // 请求成功
-    if (code === ApiCodeEnum.SUCCESS) {
-      return response.data;
-    }
-
-    // 业务错误
-    ElMessage.error(msg || "系统出错");
-    return Promise.reject(new Error(msg || "Business Error"));
+    return response.data;
   },
   async (error) => {
     console.error("Response interceptor error:", error);
 
     const { config, response } = error;
 
-    // 网络错误或服务器无响应
     if (!response) {
       ElMessage.error("网络连接失败，请检查网络设置");
       return Promise.reject(error);

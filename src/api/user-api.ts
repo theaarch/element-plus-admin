@@ -6,35 +6,35 @@ const USER_BASE_URL = "/api/v1/users";
 const UserAPI = {
   /** 获取当前登录用户信息 */
   getInfo(): Promise<ApiResponse<UserInfo>> {
-    return http.get(`${USER_BASE_URL}/me`);
+    return http.get(`/api/user`);
   },
 
   /** 获取用户分页列表 */
   getPage(queryParams: UserPageQuery): Promise<ApiResponse<PageResult<UserPageVO>>> {
-    return http.get(`${USER_BASE_URL}/page`, {
+    return http.get(`/api/users`, {
       params: queryParams,
     });
   },
 
   /** 获取用户表单详情 */
   getFormData(userId: string): Promise<ApiResponse<UserForm>> {
-    return http.get(`${USER_BASE_URL}/${userId}/form`);
+    return http.get(`/api/users/${userId}`);
   },
 
   /** 添加用户 */
   create(data: UserForm): Promise<ApiResponse<void>> {
-    return http.post(`${USER_BASE_URL}`, data);
+    return http.post(`/api/users`, data);
   },
 
   /**  修改用户 */
   update(id: string, data: UserForm): Promise<ApiResponse<void>> {
-    return http.put(`${USER_BASE_URL}/${id}`, data);
+    return http.put(`/api/users/${id}`, data);
   },
 
   /** 修改用户密码 */
   resetPassword(id: string, password: string): Promise<ApiResponse<void>> {
     return http.put(
-      `${USER_BASE_URL}/${id}/password/reset`,
+      `/api/users/${id}/password/reset`,
       {},
       {
         params: { password },
@@ -44,7 +44,7 @@ const UserAPI = {
 
   /** 批量删除用户，多个以英文逗号(,)分割 */
   deleteByIds(ids: string): Promise<ApiResponse<void>> {
-    return http.delete(`${USER_BASE_URL}/${ids}`);
+    return http.delete(`/api/users/${ids}`);
   },
 
   /** 下载用户导入模板 */
@@ -151,6 +151,12 @@ export interface UserInfo {
 
   // 权限
   perms: string[];
+
+  id?: number | string;
+  name?: string;
+  email?: string;
+  role_names?: string[];
+  permission_names?: string[];
 }
 
 export interface UserPageQuery extends PageQuery {
@@ -165,6 +171,8 @@ export interface UserPageQuery extends PageQuery {
 
   // 开始时间
   createTime?: [string, string];
+
+  created_at?: [string, string];
 }
 
 export interface UserPageVO {

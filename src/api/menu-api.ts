@@ -9,8 +9,8 @@ const MenuAPI = {
   },
 
   /** 获取菜单树形列表 */
-  getList(queryParams: MenuQuery): Promise<ApiResponse<MenuVO[]>> {
-    return http.get(`${MENU_BASE_URL}`, { params: queryParams });
+  getList(queryParams: MenuQuery): Promise<ApiWrappedResponse<MenuVO[]>> {
+    return http.get(`/api/menus`, { params: queryParams });
   },
 
   /** 获取菜单下拉数据源 */
@@ -22,22 +22,22 @@ const MenuAPI = {
 
   /** 获取菜单表单数据 */
   getFormData(id: string): Promise<ApiResponse<MenuForm>> {
-    return http.get(`${MENU_BASE_URL}/${id}/form`);
+    return http.get(`/api/menus/${id}`);
   },
 
   /** 新增菜单 */
   create(data: MenuForm): Promise<ApiResponse<void>> {
-    return http.post(`${MENU_BASE_URL}`, data);
+    return http.post(`/api/menus`, data);
   },
 
   /** 修改菜单 */
   update(id: string, data: MenuForm): Promise<ApiResponse<void>> {
-    return http.put(`${MENU_BASE_URL}/${id}`, data);
+    return http.put(`/api/menus/${id}`, data);
   },
 
   /** 删除菜单 */
   deleteById(id: string): Promise<ApiResponse<void>> {
-    return http.delete(`${MENU_BASE_URL}/${id}`);
+    return http.delete(`/api/menus/${id}`);
   },
 };
 
@@ -49,6 +49,7 @@ export interface MenuQuery {
 }
 
 import type { MenuTypeEnum } from "@/enums/system/menu-enum";
+import { ApiWrappedResponse } from "@/interfaces/response";
 
 export interface MenuVO {
   // 子菜单

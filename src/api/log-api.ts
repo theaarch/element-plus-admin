@@ -5,7 +5,7 @@ const LOG_BASE_URL = "/api/v1/logs";
 const LogAPI = {
   /** 获取日志分页列表 */
   getPage(queryParams: LogPageQuery): Promise<ApiResponse<PageResult<LogPageVO>>> {
-    return http.get(`${LOG_BASE_URL}/page`, {
+    return http.get(`/api/operation-logs`, {
       params: queryParams,
     });
   },

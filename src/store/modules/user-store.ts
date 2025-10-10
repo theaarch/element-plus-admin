@@ -19,11 +19,14 @@ export const useUserStore = defineStore("user", () => {
       AuthAPI.login(LoginFormData)
         .then((res) => {
           const data = res.data;
-          const { accessToken, refreshToken } = data;
+          // const { accessToken, refreshToken } = data;
+          const { token } = data;
 
           // 保存记住我状态和token
           rememberMe.value = LoginFormData.rememberMe;
-          AuthStorage.setTokens(accessToken, refreshToken, rememberMe.value);
+          // AuthStorage.setTokens(accessToken, refreshToken, rememberMe.value);
+          AuthStorage.setTokens(token, "", rememberMe.value);
+
           resolve();
         })
         .catch((error) => {

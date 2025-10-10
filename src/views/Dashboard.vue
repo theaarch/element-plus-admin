@@ -9,8 +9,13 @@
         <div class="flex-1 flex items-start">
           <img
             class="w80px h80px rounded-full"
-            :src="userStore.userInfo.avatar + '?imageView2/1/w/80/h/80'"
+            :src="
+              userStore.userInfo.avatar
+                ? userStore.userInfo.avatar
+                : `https://ui-avatars.com/api/?name=${encodeURIComponent(userStore.userInfo.name)}&color=7F9CF5&background=EBF4FF`
+            "
           />
+
           <div class="ml-5">
             <p>{{ greetings }}</p>
             <p class="text-sm text-gray">今日天气晴朗，气温在15℃至25℃之间，东南风。</p>
@@ -426,7 +431,8 @@ const currentDate = new Date();
 // 问候语：根据当前小时返回不同问候语
 const greetings = computed(() => {
   const hours = currentDate.getHours();
-  const nickname = userStore.userInfo.nickname;
+  // const nickname = userStore.userInfo.nickname;
+  const nickname = userStore.userInfo.name;
 
   if (hours >= 6 && hours < 8) {
     return "晨起披衣出草堂，轩窗已自喜微凉🌅！";

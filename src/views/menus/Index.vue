@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- 搜索区域 -->
     <div class="search-container">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="关键字" prop="keywords">
@@ -45,7 +44,7 @@
         class="data-table__content"
         @row-click="handleRowClick"
       >
-        <el-table-column label="菜单名称" min-width="200">
+        <el-table-column label="Title" min-width="200">
           <template #default="scope">
             <template v-if="scope.row.icon && scope.row.icon.startsWith('el-icon')">
               <el-icon style="vertical-align: -0.15em">
@@ -55,11 +54,11 @@
             <template v-else-if="scope.row.icon">
               <div :class="`i-svg:${scope.row.icon}`" />
             </template>
-            {{ scope.row.name }}
+            {{ scope.row.title }}
           </template>
         </el-table-column>
 
-        <el-table-column label="类型" align="center" width="80">
+        <el-table-column label="Type" align="center" width="80">
           <template #default="scope">
             <el-tag v-if="scope.row.type === MenuTypeEnum.CATALOG" type="warning">目录</el-tag>
             <el-tag v-if="scope.row.type === MenuTypeEnum.MENU" type="success">菜单</el-tag>
@@ -67,18 +66,18 @@
             <el-tag v-if="scope.row.type === MenuTypeEnum.EXTLINK" type="info">外链</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="路由名称" align="left" width="150" prop="routeName" />
-        <el-table-column label="路由路径" align="left" width="150" prop="routePath" />
-        <el-table-column label="组件路径" align="left" width="250" prop="component" />
-        <el-table-column label="权限标识" align="center" width="200" prop="perm" />
-        <el-table-column label="状态" align="center" width="80">
+        <el-table-column label="Name" align="left" width="150" prop="name" />
+        <el-table-column label="Path" align="left" width="150" prop="path" />
+        <el-table-column label="Component" align="left" width="250" prop="component" />
+        <el-table-column label="Permission" align="center" width="200" prop="permission" />
+        <el-table-column label="Visible" align="center" width="80">
           <template #default="scope">
             <el-tag v-if="scope.row.visible === 1" type="success">显示</el-tag>
             <el-tag v-else type="info">隐藏</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="排序" align="center" width="80" prop="sort" />
-        <el-table-column fixed="right" align="center" label="操作" width="220">
+        <el-table-column label="Sort" align="center" width="80" prop="sort" />
+        <el-table-column fixed="right" align="center" label="Actions" width="220">
           <template #default="scope">
             <el-button
               v-if="scope.row.type == MenuTypeEnum.CATALOG || scope.row.type == MenuTypeEnum.MENU"
@@ -89,7 +88,7 @@
               icon="plus"
               @click.stop="handleOpenDialog(scope.row.id)"
             >
-              新增
+              Add
             </el-button>
 
             <el-button
@@ -100,7 +99,7 @@
               icon="edit"
               @click.stop="handleOpenDialog(undefined, scope.row.id)"
             >
-              编辑
+              Edit
             </el-button>
             <el-button
               v-hasPerm="['sys:menu:delete']"
@@ -110,7 +109,7 @@
               icon="delete"
               @click.stop="handleDelete(scope.row.id)"
             >
-              删除
+              Delete
             </el-button>
           </template>
         </el-table-column>
@@ -343,7 +342,7 @@
 import { useAppStore } from "@/store/modules/app-store";
 import { DeviceEnum } from "@/enums/settings/device-enum";
 
-import MenuAPI, { MenuQuery, MenuForm, MenuVO } from "@/api/menu-api";
+import MenuAPI, { MenuForm, MenuQuery, MenuVO } from "@/api/menu-api";
 import { MenuTypeEnum } from "@/enums/system/menu-enum";
 
 defineOptions({
@@ -401,9 +400,7 @@ function handleQuery() {
   loading.value = true;
   MenuAPI.getList(queryParams)
     .then((res) => {
-      const data = res.data;
-
-      menuTableData.value = data;
+      menuTableData.value = res.data;
     })
     .finally(() => {
       loading.value = false;
@@ -421,12 +418,7 @@ function handleRowClick(row: MenuVO) {
   selectedMenuId.value = row.id;
 }
 
-/**
- * 打开表单弹窗
- *
- * @param parentId 父菜单ID
- * @param menuId 菜单ID
- */
+/** 打开表单弹窗 */
 function handleOpenDialog(parentId?: string, menuId?: string) {
   MenuAPI.getOptions(true)
     .then((res) => {
@@ -468,9 +460,7 @@ function handleMenuTypeChange() {
   }
 }
 
-/**
- * 提交表单
- */
+/** 提交表单 */
 function handleSubmit() {
   menuFormRef.value.validate((isValid: boolean) => {
     if (isValid) {

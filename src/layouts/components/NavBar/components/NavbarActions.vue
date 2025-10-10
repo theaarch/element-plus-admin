@@ -32,7 +32,15 @@
     <div class="navbar-actions__item">
       <el-dropdown trigger="click">
         <div class="user-profile">
-          <img class="user-profile__avatar" :src="userStore.userInfo.avatar" />
+          <img
+            class="user-profile__avatar"
+            :src="
+              userStore.userInfo.avatar
+                ? userStore.userInfo.avatar
+                : `https://ui-avatars.com/api/?name=${encodeURIComponent(userStore.userInfo.name)}&color=7F9CF5&background=EBF4FF`
+            "
+          />
+
           <span class="user-profile__name">{{ userStore.userInfo.username }}</span>
         </div>
         <template #dropdown>

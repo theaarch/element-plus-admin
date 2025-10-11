@@ -1,38 +1,39 @@
 import http from "@/utils/http";
 import { AxiosResponse } from "axios";
+import { ApiWrappedResponse, PaginatedResponse } from "@/interfaces/response";
 
 const USER_BASE_URL = "/api/v1/users";
 
 const UserAPI = {
   /** 获取当前登录用户信息 */
-  getInfo(): Promise<ApiResponse<UserInfo>> {
+  getInfo(): Promise<ApiWrappedResponse<UserInfo>> {
     return http.get(`/api/user`);
   },
 
   /** 获取用户分页列表 */
-  getPage(queryParams: UserPageQuery): Promise<ApiResponse<PageResult<UserPageVO>>> {
+  getPage(queryParams: UserPageQuery): Promise<PaginatedResponse<UserPageVO>> {
     return http.get(`/api/users`, {
       params: queryParams,
     });
   },
 
   /** 获取用户表单详情 */
-  getFormData(userId: string): Promise<ApiResponse<UserForm>> {
+  getFormData(userId: string): Promise<ApiWrappedResponse<UserForm>> {
     return http.get(`/api/users/${userId}`);
   },
 
   /** 添加用户 */
-  create(data: UserForm): Promise<ApiResponse<void>> {
+  create(data: UserForm): Promise<ApiWrappedResponse<void>> {
     return http.post(`/api/users`, data);
   },
 
   /**  修改用户 */
-  update(id: string, data: UserForm): Promise<ApiResponse<void>> {
+  update(id: string, data: UserForm): Promise<ApiWrappedResponse<void>> {
     return http.put(`/api/users/${id}`, data);
   },
 
   /** 修改用户密码 */
-  resetPassword(id: string, password: string): Promise<ApiResponse<void>> {
+  resetPassword(id: string, password: string): Promise<ApiWrappedResponse<void>> {
     return http.put(
       `/api/users/${id}/password/reset`,
       {},
@@ -43,7 +44,7 @@ const UserAPI = {
   },
 
   /** 批量删除用户，多个以英文逗号(,)分割 */
-  deleteByIds(ids: string): Promise<ApiResponse<void>> {
+  deleteByIds(ids: string): Promise<ApiWrappedResponse<void>> {
     return http.delete(`/api/users/${ids}`);
   },
 
@@ -63,7 +64,7 @@ const UserAPI = {
   },
 
   /** 导入用户 */
-  import(deptId: string, file: File): Promise<ApiResponse<ExcelResult>> {
+  import(deptId: string, file: File): Promise<ApiWrappedResponse<ExcelResult>> {
     const formData = new FormData();
 
     formData.append("file", file);
@@ -77,22 +78,22 @@ const UserAPI = {
   },
 
   /** 获取个人中心用户信息 */
-  getProfile(): Promise<ApiResponse<UserProfileVO>> {
+  getProfile(): Promise<ApiWrappedResponse<UserProfileVO>> {
     return http.get(`${USER_BASE_URL}/profile`);
   },
 
   /** 修改个人中心用户信息 */
-  updateProfile(data: UserProfileForm): Promise<ApiResponse<void>> {
+  updateProfile(data: UserProfileForm): Promise<ApiWrappedResponse<void>> {
     return http.put(`${USER_BASE_URL}/profile`, data);
   },
 
   /** 修改个人中心用户密码 */
-  changePassword(data: PasswordChangeForm): Promise<ApiResponse<void>> {
+  changePassword(data: PasswordChangeForm): Promise<ApiWrappedResponse<void>> {
     return http.put(`${USER_BASE_URL}/password`, data);
   },
 
   /** 发送短信验证码（绑定或更换手机号）*/
-  sendMobileCode(mobile: string): Promise<ApiResponse<void>> {
+  sendMobileCode(mobile: string): Promise<ApiWrappedResponse<void>> {
     return http.post(
       `${USER_BASE_URL}/mobile/code`,
       {},
@@ -103,12 +104,12 @@ const UserAPI = {
   },
 
   /** 绑定或更换手机号 */
-  bindOrChangeMobile(data: MobileUpdateForm): Promise<ApiResponse<void>> {
+  bindOrChangeMobile(data: MobileUpdateForm): Promise<ApiWrappedResponse<void>> {
     return http.put(`${USER_BASE_URL}/mobile`, data);
   },
 
   /** 发送邮箱验证码（绑定或更换邮箱）*/
-  sendEmailCode(email: string): Promise<ApiResponse<void>> {
+  sendEmailCode(email: string): Promise<ApiWrappedResponse<void>> {
     return http.post(
       `${USER_BASE_URL}/email/code`,
       {},
@@ -119,14 +120,14 @@ const UserAPI = {
   },
 
   /** 绑定或更换邮箱 */
-  bindOrChangeEmail(data: EmailUpdateForm): Promise<ApiResponse<void>> {
+  bindOrChangeEmail(data: EmailUpdateForm): Promise<ApiWrappedResponse<void>> {
     return http.put(`${USER_BASE_URL}/email`, data);
   },
 
   /**
    *  获取用户下拉列表
    */
-  getOptions(): Promise<ApiResponse<OptionType[]>> {
+  getOptions(): Promise<ApiWrappedResponse<OptionType[]>> {
     return http.get(`${USER_BASE_URL}/options`, {});
   },
 };

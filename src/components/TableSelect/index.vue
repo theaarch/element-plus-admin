@@ -30,6 +30,7 @@
           </slot>
         </div>
       </template>
+
       <!-- 弹出框内容 -->
       <div ref="popoverContentRef">
         <!-- 表单 -->
@@ -93,6 +94,7 @@
             <el-button icon="refresh" @click="handleReset">重置</el-button>
           </el-form-item>
         </el-form>
+
         <!-- 列表 -->
         <el-table
           ref="tableRef"
@@ -121,6 +123,7 @@
             </template>
           </template>
         </el-table>
+
         <!-- 分页 -->
         <pagination
           v-if="total > 0"
@@ -129,6 +132,7 @@
           v-model:limit="queryParams.pageSize"
           @pagination="handlePagination"
         />
+
         <div class="feedback">
           <el-button type="primary" size="small" @click="handleConfirm">
             {{ confirmText }}
@@ -261,9 +265,9 @@ function fetchPageData(isRestart = false) {
   }
   props.selectConfig
     .indexAction(queryParams)
-    .then((data) => {
-      total.value = data.total;
-      pageData.value = data.list;
+    .then((result) => {
+      total.value = result.meta.total;
+      pageData.value = result.data;
     })
     .finally(() => {
       loading.value = false;

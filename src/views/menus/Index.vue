@@ -2,18 +2,18 @@
   <div class="app-container">
     <div class="search-container">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="关键字" prop="keywords">
+        <el-form-item label="Title" prop="title">
           <el-input
-            v-model="queryParams.keywords"
-            placeholder="菜单名称"
+            v-model="queryParams.title"
+            placeholder="Enter title"
             clearable
             @keyup.enter="handleQuery"
           />
         </el-form-item>
 
         <el-form-item class="search-buttons">
-          <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
-          <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
+          <el-button type="primary" icon="search" @click="handleQuery">Search</el-button>
+          <el-button icon="refresh" @click="handleResetQuery">Reset</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -27,7 +27,7 @@
             icon="plus"
             @click="handleOpenDialog('0')"
           >
-            新增
+            Add
           </el-button>
         </div>
       </div>
@@ -428,6 +428,7 @@ function handleOpenDialog(parentId?: string, menuId?: string) {
     })
     .then(() => {
       dialog.visible = true;
+
       if (menuId) {
         dialog.title = "编辑菜单";
         MenuAPI.getFormData(menuId).then((res) => {
@@ -460,11 +461,11 @@ function handleMenuTypeChange() {
   }
 }
 
-/** 提交表单 */
 function handleSubmit() {
   menuFormRef.value.validate((isValid: boolean) => {
     if (isValid) {
       const menuId = formData.value.id;
+
       if (menuId) {
         //修改时父级菜单不能为当前菜单
         if (formData.value.parentId == menuId) {
@@ -487,7 +488,6 @@ function handleSubmit() {
   });
 }
 
-// 删除菜单
 function handleDelete(menuId: string) {
   if (!menuId) {
     ElMessage.warning("请勾选删除项");
@@ -531,7 +531,6 @@ function resetForm() {
   };
 }
 
-// 关闭弹窗
 function handleCloseDialog() {
   dialog.visible = false;
   resetForm();

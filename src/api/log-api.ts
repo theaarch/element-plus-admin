@@ -1,10 +1,12 @@
 import http from "@/utils/http";
+import { Log, LogFilters } from "@/interfaces/logs";
+import { PaginatedResponse } from "@/interfaces/response";
 
 const LOG_BASE_URL = "/api/v1/logs";
 
 const LogAPI = {
   /** 获取日志分页列表 */
-  getPage(queryParams: LogPageQuery): Promise<ApiResponse<PageResult<LogPageVO>>> {
+  getPage(queryParams?: LogFilters): Promise<PaginatedResponse<Log>> {
     return http.get(`/api/operation-logs`, {
       params: queryParams,
     });

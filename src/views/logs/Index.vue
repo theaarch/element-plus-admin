@@ -1,117 +1,114 @@
 <template>
   <div class="app-container">
-    <!-- 搜索区域 -->
     <div class="search-container">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item prop="keywords" label="关键字">
-          <el-input
-            v-model="queryParams.keywords"
-            placeholder="日志内容"
-            clearable
-            @keyup.enter="handleQuery"
-          />
-        </el-form-item>
-
-        <el-form-item prop="createTime" label="操作时间">
+      <el-form ref="filtersForm" :model="queryParams" :inline="true">
+        <el-form-item prop="created_at" label="Created At">
           <el-date-picker
-            v-model="queryParams.createTime"
-            :editable="false"
-            type="daterange"
-            range-separator="~"
-            start-placeholder="开始时间"
-            end-placeholder="截止时间"
-            value-format="YYYY-MM-DD"
-            style="width: 200px"
+            v-model="queryParams.created_at"
+            type="datetimerange"
+            range-separator="To"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+            :default-time="dateTimeRangeDefaultTime()"
           />
         </el-form-item>
 
         <el-form-item class="search-buttons">
-          <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
-          <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
+          <el-button type="primary" icon="search" :loading="tableLoading" @click="applyFilters">
+            Search
+          </el-button>
+          <el-button icon="refresh" @click="resetFilters">Reset</el-button>
         </el-form-item>
       </el-form>
     </div>
 
     <el-card shadow="hover" class="data-table">
       <el-table
-        v-loading="loading"
-        :data="pageData"
+        v-loading="tableLoading"
+        :data="tableData"
         highlight-current-row
         border
         class="data-table__content"
       >
-        <el-table-column label="Time" prop="created_at" />
-        <el-table-column label="User ID" prop="user_id" />
-        <el-table-column label="User name" prop="user.name" />
-        <el-table-column label="Route name" prop="route_name" />
-        <el-table-column label="IP" prop="ip" />
-        <el-table-column label="Locale" prop="locale" />
-        <el-table-column label="Country code" prop="country_code" />
-        <el-table-column label="Status" prop="status" />
+        <el-table-column
+          v-for="col in columns"
+          :key="col.prop"
+          :prop="col.prop"
+          :label="col.label"
+          :formatter="col.formatter"
+        />
       </el-table>
 
       <pagination
-        v-if="total > 0"
-        v-model:total="total"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
-        @pagination="fetchData"
+        v-if="paginationTotal > 0"
+        v-model:total="paginationTotal"
+        v-model:page="queryParams.page"
+        v-model:limit="queryParams.per_page"
+        @pagination="loadData"
       />
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
+import LogAPI from "@/api/log-api";
+import { formatDatetime } from "@/utils/formatters";
+import { dateTimeRangeDefaultTime } from "@/utils/date";
+import { Log, LogFilters } from "@/interfaces/logs";
+import type { FormInstance } from "element-plus";
+
 defineOptions({
-  name: "Log",
+  name: "Logs",
   inheritAttrs: false,
 });
 
-import LogAPI, { LogPageVO, LogPageQuery } from "@/api/log-api";
+const tableLoading = ref(false);
+const tableData = ref<Log[]>([]);
+const columns = [
+  { prop: "created_at", label: "Created At", formatter: formatDatetime },
+  { prop: "user_id", label: "User ID" },
+  { prop: "user.name", label: "User name", formatter: (row: any) => row.user?.name || "" },
+  { prop: "route_name", label: "Route name" },
+  { prop: "ip", label: "IP" },
+  { prop: "locale", label: "Locale" },
+  { prop: "country_code", label: "Country code" },
+  { prop: "status", label: "Status" },
+];
+const paginationTotal = ref(0);
 
-const queryFormRef = ref();
-
-const loading = ref(false);
-const total = ref(0);
-
-const queryParams = reactive<LogPageQuery>({
-  pageNum: 1,
-  pageSize: 10,
-  keywords: "",
-  createTime: ["", ""],
+const filtersForm = ref<FormInstance>();
+const queryParams = reactive<LogFilters>({
+  page: 1,
+  per_page: 10,
 });
 
-// 日志表格数据
-const pageData = ref<LogPageVO[]>();
+async function loadData() {
+  tableLoading.value = true;
 
-/** 获取数据 */
-function fetchData() {
-  loading.value = true;
-  LogAPI.getPage(queryParams)
-    .then((res) => {
-      pageData.value = res.data;
-      total.value = res.meta.total;
-    })
-    .finally(() => {
-      loading.value = false;
-    });
+  try {
+    const result = await LogAPI.getPage(queryParams);
+
+    tableData.value = result.data;
+    paginationTotal.value = result.meta.total;
+  } catch (error) {
+    console.error("Failed to load data:", error);
+    ElMessage.error("Failed to load data.");
+  } finally {
+    tableLoading.value = false;
+  }
 }
 
-/** 查询（重置页码后获取数据） */
-function handleQuery() {
-  queryParams.pageNum = 1;
-  fetchData();
+function applyFilters() {
+  queryParams.page = Number(queryParams.page) || 1;
+  loadData();
 }
 
-/** 重置查询 */
-function handleResetQuery() {
-  queryFormRef.value.resetFields();
-  queryParams.pageNum = 1;
-  queryParams.createTime = undefined;
-  fetchData();
+function resetFilters() {
+  filtersForm.value?.resetFields?.();
+  queryParams.page = 1;
+  queryParams.created_at = undefined;
+  loadData();
 }
 
-onMounted(() => {
-  handleQuery();
-});
+onMounted(loadData);
 </script>

@@ -22,8 +22,7 @@ const contentConfig: IContentConfig<UserPageQuery> = {
     };
   },
   async indexAction(params) {
-    const response = await UserAPI.getPage(params);
-    return response.data;
+    return await UserAPI.getPage(params);
   },
   deleteAction: UserAPI.deleteByIds,
   importAction(file) {

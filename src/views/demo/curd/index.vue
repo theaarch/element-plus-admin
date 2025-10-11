@@ -160,14 +160,14 @@ const handleOperateClick = (data: IObject) => {
       // 加载下拉数据源，建议在初始化配置项 initFn 中加载，避免多次请求
       // editModalConfig.formItems[2]!.attrs!.data = await DeptAPI.getOptions();
 
-      const response = await UserAPI.getFormData(data.row.id); // 根据ID获取详情
-      return response.data;
+      const result = await UserAPI.getFormData(data.row.id); // 根据ID获取详情
+      return result.data;
     });
   } else if (data.name === "edit") {
     editModalConfig.drawer = { ...editModalConfig.drawer, title: "修改" };
     handleEditClick(data.row, async () => {
-      const response = await UserAPI.getFormData(data.row.id); // 根据ID获取详情
-      return response.data;
+      const result = await UserAPI.getFormData(data.row.id); // 根据ID获取详情
+      return result.data;
     });
   } else if (data.name === "reset_pwd") {
     ElMessageBox.prompt("请输入用户「" + data.row.username + "」的新密码", "重置密码", {

@@ -17,6 +17,7 @@
           </el-button>
         </template>
       </div>
+
       <!-- 右侧工具栏 -->
       <div class="toolbar-right flex gap-y-2.5 gap-x-2 md:gap-x-3 flex-wrap">
         <template v-for="(btn, index) in toolbarRightBtn" :key="index">
@@ -24,12 +25,14 @@
             <template #reference>
               <el-button v-bind="btn.attrs"></el-button>
             </template>
+
             <el-scrollbar max-height="350px">
               <template v-for="col in cols" :key="col.prop">
                 <el-checkbox v-if="col.prop" v-model="col.show" :label="col.label" />
               </template>
             </el-scrollbar>
           </el-popover>
+
           <el-button
             v-else
             v-hasPerm="btn.perm ?? '*:*:*'"
@@ -78,12 +81,14 @@
                 </template>
               </template>
             </template>
+
             <!-- 根据行的selectList属性返回对应列表值 -->
             <template v-else-if="col.templet === 'list'">
               <template v-if="col.prop">
                 {{ (col.selectList ?? {})[scope.row[col.prop]] }}
               </template>
             </template>
+
             <!-- 格式化显示链接 -->
             <template v-else-if="col.templet === 'url'">
               <template v-if="col.prop">
@@ -92,6 +97,7 @@
                 </el-link>
               </template>
             </template>
+
             <!-- 生成开关组件 -->
             <template v-else-if="col.templet === 'switch'">
               <template v-if="col.prop">
@@ -111,6 +117,7 @@
                 />
               </template>
             </template>
+
             <!-- 生成输入框组件 -->
             <template v-else-if="col.templet === 'input'">
               <template v-if="col.prop">
@@ -122,16 +129,19 @@
                 />
               </template>
             </template>
+
             <!-- 格式化为价格 -->
             <template v-else-if="col.templet === 'price'">
               <template v-if="col.prop">
                 {{ `${col.priceFormat ?? "￥"}${scope.row[col.prop]}` }}
               </template>
             </template>
+
             <!-- 格式化为百分比 -->
             <template v-else-if="col.templet === 'percent'">
               <template v-if="col.prop">{{ scope.row[col.prop] }}%</template>
             </template>
+
             <!-- 显示图标 -->
             <template v-else-if="col.templet === 'icon'">
               <template v-if="col.prop">
@@ -145,6 +155,7 @@
                 </template>
               </template>
             </template>
+
             <!-- 格式化时间 -->
             <template v-else-if="col.templet === 'date'">
               <template v-if="col.prop">
@@ -156,6 +167,7 @@
                 }}
               </template>
             </template>
+
             <!-- 列操作栏 -->
             <template v-else-if="col.templet === 'tool'">
               <template v-for="(btn, index) in tableToolbarBtn" :key="index">
@@ -176,6 +188,7 @@
                 </el-button>
               </template>
             </template>
+
             <!-- 自定义 -->
             <template v-else-if="col.templet === 'custom'">
               <slot :name="col.slotName ?? col.prop" :prop="col.prop" v-bind="scope" />
@@ -244,6 +257,7 @@
           </el-form-item>
         </el-form>
       </el-scrollbar>
+
       <!-- 弹窗底部操作按钮 -->
       <template #footer>
         <div style="padding-right: var(--el-dialog-padding-primary)">
@@ -252,6 +266,7 @@
         </div>
       </template>
     </el-dialog>
+
     <!-- 导入弹窗 -->
     <el-dialog
       v-model="importModalVisible"
@@ -304,6 +319,7 @@
           </el-form-item>
         </el-form>
       </el-scrollbar>
+
       <!-- 弹窗底部操作按钮 -->
       <template #footer>
         <div style="padding-right: var(--el-dialog-padding-primary)">
@@ -450,12 +466,14 @@ const cols = ref(
     return col;
   })
 );
+
 // 加载状态
 const loading = ref(false);
 // 列表数据
 const pageData = ref<IObject[]>([]);
 // 显示分页
 const showPagination = props.contentConfig.pagination !== false;
+
 // 分页配置
 const defaultPagination = {
   background: true,
@@ -470,6 +488,7 @@ const pagination = reactive(
     ? { ...defaultPagination, ...props.contentConfig.pagination }
     : defaultPagination
 );
+
 // 分页相关的请求参数
 const request = props.contentConfig.request ?? {
   pageName: "pageNum",
@@ -480,6 +499,7 @@ const tableRef = ref<TableInstance>();
 
 // 行选中
 const selectionData = ref<IObject[]>([]);
+
 // 删除ID集合 用于批量删除
 const removeIds = ref<(number | string)[]>([]);
 function handleSelectionChange(selection: any[]) {
@@ -553,10 +573,12 @@ const exportsFormRules: FormRules = {
   fields: [{ required: true, message: "请选择字段" }],
   origin: [{ required: true, message: "请选择数据源" }],
 };
+
 // 打开导出弹窗
 function handleOpenExportsModal() {
   exportsModalVisible.value = true;
 }
+
 // 导出确认
 const handleExportsSubmit = useThrottleFn(() => {
   exportsFormRef.value?.validate((valid: boolean) => {
@@ -566,6 +588,7 @@ const handleExportsSubmit = useThrottleFn(() => {
     }
   });
 }, 3000);
+
 // 关闭导出弹窗
 function handleCloseExportsModal() {
   exportsModalVisible.value = false;
@@ -574,6 +597,7 @@ function handleCloseExportsModal() {
     exportsFormRef.value?.clearValidate();
   });
 }
+
 // 导出
 function handleExports() {
   const filename = exportsFormData.filename
@@ -629,11 +653,13 @@ const importFormData = reactive<{
 const importFormRules: FormRules = {
   files: [{ required: true, message: "请选择文件" }],
 };
+
 // 打开导入弹窗
 function handleOpenImportModal(isFile: boolean = false) {
   importModalVisible.value = true;
   isFileImport = isFile;
 }
+
 // 覆盖前一个文件
 function handleFileExceed(files: File[]) {
   uploadRef.value!.clearFiles();
@@ -641,6 +667,7 @@ function handleFileExceed(files: File[]) {
   file.uid = genFileId();
   uploadRef.value!.handleStart(file);
 }
+
 // 下载导入模板
 function handleDownloadTemplate() {
   const importTemplate = props.contentConfig.importTemplate;
@@ -658,6 +685,7 @@ function handleDownloadTemplate() {
     ElMessage.error("未配置importTemplate");
   }
 }
+
 // 导入确认
 const handleImportSubmit = useThrottleFn(() => {
   importFormRef.value?.validate((valid: boolean) => {
@@ -670,6 +698,7 @@ const handleImportSubmit = useThrottleFn(() => {
     }
   });
 }, 3000);
+
 // 关闭导入弹窗
 function handleCloseImportModal() {
   importModalVisible.value = false;
@@ -678,6 +707,7 @@ function handleCloseImportModal() {
     importFormRef.value?.clearValidate();
   });
 }
+
 // 文件导入
 function handleImport() {
   const importAction = props.contentConfig.importAction;
@@ -691,6 +721,7 @@ function handleImport() {
     handleRefresh(true);
   });
 }
+
 // 导入
 function handleImports() {
   const importsAction = props.contentConfig.importsAction;
@@ -820,6 +851,7 @@ function handleSizeChange(value: number) {
   pagination.pageSize = value;
   handleRefresh();
 }
+
 function handleCurrentChange(value: number) {
   pagination.currentPage = value;
   handleRefresh();
@@ -868,15 +900,16 @@ function fetchPageData(formData: IObject = {}, isRestart = false) {
           }
         : formData
     )
-    .then((data) => {
+    .then((result) => {
       if (showPagination) {
-        if (props.contentConfig.parseData) {
-          data = props.contentConfig.parseData(data);
-        }
-        pagination.total = data.total;
-        pageData.value = data.list;
+        // if (props.contentConfig.parseData) {
+        //   result = props.contentConfig.parseData(result);
+        // }
+
+        pagination.total = result.meta.total;
+        pageData.value = result.data;
       } else {
-        pageData.value = data;
+        pageData.value = result;
       }
     })
     .finally(() => {

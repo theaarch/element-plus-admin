@@ -2,37 +2,36 @@
   <div class="app-container">
     <div class="search-container">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true" label-width="auto">
-        <el-form-item label="关键字" prop="keywords">
+        <el-form-item label="Email" prop="email">
           <el-input
-            v-model="queryParams.keywords"
-            placeholder="Email/昵称/手机号"
+            v-model="queryParams.email"
+            placeholder="Email"
             clearable
             @keyup.enter="handleQuery"
           />
         </el-form-item>
 
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 100px">
-            <el-option label="正常" :value="1" />
-            <el-option label="禁用" :value="0" />
+        <el-form-item label="Status" prop="status">
+          <el-select v-model="queryParams.status" placeholder="All" clearable style="width: 100px">
+            <el-option label="Active" value="active" />
+            <el-option label="Inactive" value="inactive" />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="创建时间">
+        <el-form-item label="Created At">
           <el-date-picker
             v-model="queryParams.created_at"
-            :editable="false"
-            type="daterange"
-            range-separator="~"
-            start-placeholder="开始时间"
-            end-placeholder="截止时间"
-            value-format="YYYY-MM-DD"
+            type="datetimerange"
+            range-separator="To"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+            :default-time="[new Date(0, 0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59, 59)]"
           />
         </el-form-item>
 
         <el-form-item class="search-buttons">
-          <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
-          <el-button icon="refresh" @click="handleResetQuery">重置</el-button>
+          <el-button type="primary" icon="search" @click="handleQuery">Search</el-button>
+          <el-button icon="refresh" @click="handleResetQuery">Reset</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -46,7 +45,7 @@
             icon="plus"
             @click="handleOpenDialog()"
           >
-            新增
+            Add
           </el-button>
           <el-button
             v-hasPerm="'sys:user:delete'"
@@ -55,16 +54,16 @@
             :disabled="selectIds.length === 0"
             @click="handleDelete()"
           >
-            删除
+            Delete
           </el-button>
         </div>
         <div class="data-table__toolbar--tools">
           <el-button v-hasPerm="'sys:user:import'" icon="upload" @click="handleOpenImportDialog">
-            导入
+            Import
           </el-button>
 
           <el-button v-hasPerm="'sys:user:export'" icon="download" @click="handleExport">
-            导出
+            Export
           </el-button>
         </div>
       </div>
@@ -82,15 +81,20 @@
         <el-table-column label="ID" prop="id" />
         <el-table-column label="Email" prop="email" />
         <el-table-column label="Name" align="center" prop="name" />
-        <el-table-column label="Roles"  align="center" prop="deptName" />
-        <el-table-column label="Status" align="center" prop="status" >
+        <el-table-column label="Roles" align="center" prop="deptName" />
+        <el-table-column label="Status" align="center" prop="status">
           <template #default="scope">
-            <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
-              {{ scope.row.status == 1 ? "正常" : "禁用" }}
+            <el-tag :type="scope.row.status == 'active' ? 'success' : 'info'">
+              {{ scope.row.status == "active" ? "Active" : "Inactive" }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="Created At" align="center" prop="created_at"  />
+        <el-table-column
+          label="Created At"
+          align="center"
+          prop="created_at"
+          :formatter="formatDatetime"
+        />
         <el-table-column label="Actions" fixed="right" width="220">
           <template #default="scope">
             <el-button
@@ -130,8 +134,8 @@
       <pagination
         v-if="total > 0"
         v-model:total="total"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
+        v-model:page="queryParams.page"
+        v-model:limit="queryParams.per_page"
         @pagination="fetchData"
       />
     </el-card>
@@ -213,14 +217,14 @@
 </template>
 
 <script setup lang="ts">
+import { formatDatetime } from "@/utils/formatters";
 import { useAppStore } from "@/store/modules/app-store";
 import { DeviceEnum } from "@/enums/settings/device-enum";
-
 import UserAPI, { UserForm, UserPageQuery, UserPageVO } from "@/api/user-api";
 import DeptAPI from "@/api/dept-api";
 import RoleAPI from "@/api/role-api";
 
-import DeptTree from "./components/DeptTree.vue";
+// import DeptTree from "./components/DeptTree.vue";
 import UserImport from "./components/UserImport.vue";
 import { useUserStore } from "@/store";
 
@@ -237,8 +241,8 @@ const queryFormRef = ref();
 const userFormRef = ref();
 
 const queryParams = reactive<UserPageQuery>({
-  pageNum: 1,
-  pageSize: 10,
+  page: 1,
+  per_page: 10,
 });
 
 const pageData = ref<UserPageVO[]>();
@@ -252,9 +256,7 @@ const dialog = reactive({
 
 const drawerSize = computed(() => (appStore.device === DeviceEnum.DESKTOP ? "600px" : "90%"));
 
-const formData = reactive<UserForm>({
-  status: 1,
-});
+const formData = reactive<Partial<UserForm>>({});
 
 const rules = reactive({
   email: [{ required: true, message: "Email不能为空", trigger: "blur" }],
@@ -291,10 +293,10 @@ async function fetchData() {
   loading.value = true;
 
   try {
-    const res = await UserAPI.getPage(queryParams);
+    const result = await UserAPI.getPage(queryParams);
 
-    pageData.value = res.data;
-    total.value = res.meta.total;
+    pageData.value = result.data;
+    total.value = result.meta.total;
   } finally {
     loading.value = false;
   }
@@ -302,16 +304,18 @@ async function fetchData() {
 
 // 查询（重置页码后获取数据）
 function handleQuery() {
-  queryParams.pageNum = 1;
+  queryParams.page = 1;
   fetchData();
 }
 
 // 重置查询
 function handleResetQuery() {
   queryFormRef.value.resetFields();
-  queryParams.pageNum = 1;
+  queryParams.page = 1;
+
   queryParams.deptId = undefined;
   queryParams.createTime = undefined;
+
   fetchData();
 }
 

@@ -91,8 +91,7 @@ const selectConfig: ISelectConfig = {
       delete params.createAt;
     }
 
-    const response = await UserAPI.getPage(params);
-    return response.data;
+    return await UserAPI.getPage(params);
   },
   tableColumns: [
     { type: "selection", width: 50, align: "center" },

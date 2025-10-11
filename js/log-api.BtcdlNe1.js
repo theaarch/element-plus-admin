@@ -1,1 +1,0 @@
-import{bk as t}from"./index.CM47KQtG.js";const s="/api/v1/logs",i={getPage:s=>t.get("/api/operation-logs",{params:s}),getVisitTrend:i=>t.get(`${s}/visit-trend`,{params:i}),getVisitStats:()=>t.get(`${s}/visit-stats`)};export{i as L};

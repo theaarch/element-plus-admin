@@ -31,7 +31,7 @@
         class="data-table__content"
       >
         <el-table-column
-          v-for="col in columns"
+          v-for="col in tableColumns"
           :key="col.prop"
           :prop="col.prop"
           :label="col.label"
@@ -64,7 +64,7 @@ defineOptions({
 
 const tableLoading = ref(false);
 const tableData = ref<Log[]>([]);
-const columns = [
+const tableColumns = [
   { prop: "created_at", label: "Created At", formatter: formatDatetime },
   { prop: "user_id", label: "User ID" },
   { prop: "user.name", label: "User name", formatter: (row: any) => row.user?.name || "" },
